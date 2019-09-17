@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Basic knowledge of deadlock - definition, detection and avoidance, etc.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deadlock">
+<meta property="og:url" content="http://dibugger.github.io/2016/12/18/Deadlock/index.html">
+<meta property="og:site_name" content="dibugger">
+<meta property="og:description" content="Basic knowledge of deadlock - definition, detection and avoidance, etc.">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://dibugger.github.io/images/post_images/Deadlock/one_resource.png">
+<meta property="og:image" content="http://dibugger.github.io/images/post_images/Deadlock/deadlock_prevention.png">
+<meta property="og:updated_time" content="2019-09-17T05:10:38.224Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deadlock">
+<meta name="twitter:description" content="Basic knowledge of deadlock - definition, detection and avoidance, etc.">
+<meta name="twitter:image" content="http://dibugger.github.io/images/post_images/Deadlock/one_resource.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://dibugger.github.io/2016/12/18/Deadlock/">
+
+
+
+
+
+  <title>Deadlock | dibugger</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">dibugger</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2016/12/18/Deadlock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Di Luo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/profile-image.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dibugger">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Deadlock</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-18T18:10:02-08:00">
+                2016-12-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Operating-Systems/" itemprop="url" rel="index">
+                    <span itemprop="name">Operating Systems</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">Basic knowledge of deadlock - definition, detection and avoidance, etc.</blockquote>
+<a id="more"></a>
+
+<h2 id="Definition"><a href="#Definition" class="headerlink" title="Definition"></a>Definition</h2><p>A set of processes is deadlocked if each process in the set is waiting for an event that only another process in the set can cause.</p>
+<p>Deadlock only involve non-preemptive resources, which is a kind of resource that cannot be taken away from its owner without ill-effect.</p>
+<h2 id="Deadlock-Prevention"><a href="#Deadlock-Prevention" class="headerlink" title="Deadlock Prevention"></a>Deadlock Prevention</h2><h3 id="Mutual-Exclusion"><a href="#Mutual-Exclusion" class="headerlink" title="Mutual Exclusion"></a>Mutual Exclusion</h3><ul>
+<li>Peterson’s solution:</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FALSE 0</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TRUE 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> N 2 <span class="comment">// number of processes</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// process can be 0 or 1</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">enter_region</span><span class="params">(<span class="keyword">int</span> process)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> other = <span class="number">1</span> - process;</span><br><span class="line">  interested[process] = TRUE; <span class="comment">// show that you are interested</span></span><br><span class="line">  turn = process; <span class="comment">// set the flag, it is your turn</span></span><br><span class="line">  <span class="keyword">while</span> (turn == process &amp;&amp; interested[other] == TRUE); <span class="comment">// while other is still in the critical region, wait</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">leave_region</span><span class="params">(<span class="keyword">int</span> process)</span> </span>&#123;</span><br><span class="line">  interested[process] = FALSE; <span class="comment">// indicate departure of the critical region</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>When two processes call enter_region at the same time, they store their number in <strong>turn</strong>. However, only the last one counts as it overwrites the previous one. Let’s suppose process 1 sets last, so <strong>turn = 1</strong>. When both processes come to the <strong>while</strong> statement, the process 0 would enter the critical region first as <strong>turn != 0</strong>, and process 1 must loop and wait for the departure of process 0.</p>
+<ul>
+<li>TSL instruction: Test and Set Lock</li>
+</ul>
+<p><strong>TSL RX LOCK</strong></p>
+<p>Read the content of the memory word <strong>LOCK</strong> into register RX, and then store a non-zero value at the memory address <strong>LOCK</strong>. These operation is atomic, which means that no other process can access the memory word before the TSL operation is finished.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">enter_region:</span><br><span class="line">  TSL REGISTER, LOCK   // copy the old value to the register and set lock to 1</span><br><span class="line">  CMP REGISTER, #0 // test if the old value is 0</span><br><span class="line">  JNE enter_region // if not 0, TSL the LOCK again until it is 0</span><br><span class="line">  RET // return to caller, process can access the region</span><br><span class="line"></span><br><span class="line">leave_region:</span><br><span class="line">  MOVE LOCK, #0 // set the LOCK back to 0</span><br><span class="line">  RET</span><br></pre></td></tr></table></figure>
+
+<h3 id="Semaphores"><a href="#Semaphores" class="headerlink" title="Semaphores"></a>Semaphores</h3><p>A new variable type which basically has two operation: down and up. Checking the value, changing it and possibly going to sleep is <strong>atomic action</strong>. If a operation on a semaphore can not be done, it is blocked at that semaphore.</p>
+<p>solving the producer and consumer problem with semaphore:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> N 100;</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> semaphore;</span><br><span class="line">semaphore mutex = <span class="number">1</span>; <span class="comment">// use to perform mutual exclusion</span></span><br><span class="line">semaphore empty = N; <span class="comment">// counts empty slots</span></span><br><span class="line">semaphore full = <span class="number">0</span>; <span class="comment">// counts full slots</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">producer</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> item;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (TRUE) &#123;</span><br><span class="line">    item = produce_item();</span><br><span class="line">    down(&amp;empty);</span><br><span class="line">    down(&amp;mutex); <span class="comment">// enter critical region</span></span><br><span class="line">    insert_item(item);</span><br><span class="line">    up(&amp;mutex);</span><br><span class="line">    up(&amp;full);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">consumer</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> item;</span><br><span class="line">  <span class="keyword">while</span> (TRUE) &#123;</span><br><span class="line">    down(&amp;full);</span><br><span class="line">    down(&amp;mutex);</span><br><span class="line">    item = remove_item();</span><br><span class="line">    up(&amp;mutex);</span><br><span class="line">    up(&amp;empty);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>There are three semaphores in the code, empty, full and mutex. The former two are used to count the empty and full slots in the buffer. The last one is used to achieve mutual exclusion. When the mutex is set to 0, the process own the resource and no other processes can access it at the same time.</p>
+<h3 id="Mutex-binary-semaphore"><a href="#Mutex-binary-semaphore" class="headerlink" title="Mutex: binary semaphore"></a>Mutex: binary semaphore</h3><p>Mutexes are good for managing mutual exclusion to some shared resource or piece of code.</p>
+<p>It is a shared variable which has two value: lock, unlock.</p>
+<p><strong>Mutex vs Semaphore</strong></p>
+<p>Semaphore is a new variable type which is used to determine that certain shared resources can be accessed simultaneously by at most N processes. When a process is trying to acquire the resource, the semaphore decrease by one and when the process finish, the semaphore increase by one to signal the waiting processes.</p>
+<p>Mutex is a binary semaphore which is used to lock certain shared resource and a piece of code. When a process is entering the region, no other processes can operate it at the same time until the process leave.</p>
+<p>An analogy:</p>
+<p>A Mutex is a key of a bathroom. You use the key to enter the bathroom, no other person can use the same bathroom until you leave it and return the key.</p>
+<p>A semaphore is the number of bathrooms. When a person use a bathroom, the number decrease by one. When s/he leave, the number increase by one. When the semaphore is equal to 0, no available bathroom can be used and people should wait for an available one.</p>
+<p>A mutex is not a special semaphore where N = 1. A mutex can only be set by the process that owns it, but semaphore can be set by any process.</p>
+<h2 id="Deadlock-Detection"><a href="#Deadlock-Detection" class="headerlink" title="Deadlock Detection"></a>Deadlock Detection</h2><h3 id="One-resource-of-each-type"><a href="#One-resource-of-each-type" class="headerlink" title="One resource of each type"></a>One resource of each type</h3><ul>
+<li>construct a resource graph</li>
+<li>if it contains one or more cycles, a deadlock exists</li>
+</ul>
+<p><img src="/images/post_images/Deadlock/one_resource.png"></p>
+<h3 id="Multiple-resources-of-each-type"><a href="#Multiple-resources-of-each-type" class="headerlink" title="Multiple resources of each type"></a>Multiple resources of each type</h3><h3 id="When-to-check-for-deadlock"><a href="#When-to-check-for-deadlock" class="headerlink" title="When to check for deadlock?"></a>When to check for deadlock?</h3><ul>
+<li>check every time a resource request is made</li>
+<li>check every k minutes</li>
+<li>when cpu utilization drops to a low threshold</li>
+</ul>
+<h2 id="Recovery-from-Deadlock"><a href="#Recovery-from-Deadlock" class="headerlink" title="Recovery from Deadlock"></a>Recovery from Deadlock</h2><ul>
+<li>Through preemption: temporarily take a resource away and give it to another process; need human intervention; not possible to perform frequently.</li>
+<li>Through rollback: have processes checkpointed periodically. When a deadlock occurs, the process must be rolled back to the point before it requires this resource.</li>
+<li>Through killing process: kill a process in the cycle</li>
+</ul>
+<h2 id="Deadlock-avoidance"><a href="#Deadlock-avoidance" class="headerlink" title="Deadlock avoidance"></a>Deadlock avoidance</h2><p>The banker’s algorithm: check if granting the request leads to an unsafe state. If it does, the request is denied.</p>
+<ul>
+<li>checks if it has enough resources to satisfy some customers</li>
+<li>if it does, the process closest to the limit is assumed to be done and resources are back and so on.</li>
+<li>if all resources can eventually repaid, it is safe</li>
+</ul>
+<p>No use in practice, since processes rarely know in advance what their maximum resource needs will be.</p>
+<p>Better solutions:</p>
+<ul>
+<li>Avoid assigning a resource when that is not absolutely necessary</li>
+<li>make sure that as few processes as possible can claim the resource</li>
+</ul>
+<p><img src="/images/post_images/Deadlock/deadlock_prevention.png"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/18/Process-and-Thread/" rel="next" title="Process and Thread">
+                <i class="fa fa-chevron-left"></i> Process and Thread
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/01/union-find/" rel="prev" title="Union-Find">
+                Union-Find <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/profile-image.jpeg" alt="Di Luo">
+            
+              <p class="site-author-name" itemprop="name">Di Luo</p>
+              <p class="site-description motion-element" itemprop="description">Software Ninjaneer</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/dibugger" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/profile.php?id=100009405004406" target="_blank" title="Facebook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>Facebook</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com/dibugger/" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.linkedin.com/in/dibugger" target="_blank" title="LinkedIn">
+                      
+                        <i class="fa fa-fw fa-linkedin"></i>LinkedIn</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Definition"><span class="nav-number">1.</span> <span class="nav-text">Definition</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deadlock-Prevention"><span class="nav-number">2.</span> <span class="nav-text">Deadlock Prevention</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mutual-Exclusion"><span class="nav-number">2.1.</span> <span class="nav-text">Mutual Exclusion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Semaphores"><span class="nav-number">2.2.</span> <span class="nav-text">Semaphores</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mutex-binary-semaphore"><span class="nav-number">2.3.</span> <span class="nav-text">Mutex: binary semaphore</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deadlock-Detection"><span class="nav-number">3.</span> <span class="nav-text">Deadlock Detection</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#One-resource-of-each-type"><span class="nav-number">3.1.</span> <span class="nav-text">One resource of each type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Multiple-resources-of-each-type"><span class="nav-number">3.2.</span> <span class="nav-text">Multiple resources of each type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#When-to-check-for-deadlock"><span class="nav-number">3.3.</span> <span class="nav-text">When to check for deadlock?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Recovery-from-Deadlock"><span class="nav-number">4.</span> <span class="nav-text">Recovery from Deadlock</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deadlock-avoidance"><span class="nav-number">5.</span> <span class="nav-text">Deadlock avoidance</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Di Luo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

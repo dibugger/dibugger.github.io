@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Static和final的用法总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java中static和final的作用和用法">
+<meta property="og:url" content="http://dibugger.github.io/2016/12/08/java-static-final/index.html">
+<meta property="og:site_name" content="dibugger">
+<meta property="og:description" content="Static和final的用法总结">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-09-17T05:10:38.224Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java中static和final的作用和用法">
+<meta name="twitter:description" content="Static和final的用法总结">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://dibugger.github.io/2016/12/08/java-static-final/">
+
+
+
+
+
+  <title>Java中static和final的作用和用法 | dibugger</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">dibugger</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2016/12/08/java-static-final/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Di Luo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/profile-image.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dibugger">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java中static和final的作用和用法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-08T12:42:22-08:00">
+                2016-12-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">Static和final的用法总结</blockquote>
+<a id="more"></a>
+
+<h3 id="Static"><a href="#Static" class="headerlink" title="Static"></a>Static</h3><p>static是静态修饰符，所谓静态修饰符，就是指程序编译后所分配的内存一直存在，直到程序退出后才释放该内存。在Java中没有全局变量的概念。使用static修饰的类成员可以直接通过(.)来访问，而不需要新建对象。被static修饰的成员变量和方法独立于该类的任何对象，也就是说静态变量不依赖于任何对象而存在，被类的所有实例所共享。在JVM加载类的时候，Java虚拟机就可以在运行时数据区内找到被static修饰的变量和方法，而不需要实例化任何对象。此外，用static修饰的静态代码块，在Java虚拟机加载类时就会执行。</p>
+<h4 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h4><p>静态变量在内存中只有一个拷贝，JVM只为静态变量分配一次内存，在加载类的过程中完成该静态变量的内存分配，可以直接用类名访问，但也可以通过实例访问。</p>
+<p>而实例变量是在创建对象时才会分配内存，实例对象可以在内存中有多个拷贝。各个对象的实例变量之间相互不影响。</p>
+<h4 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h4><p>静态方法可以直接通过类名调用，被所有实例共享，在静态方法中不能使用this和super关键字（因为this和super对应了当前对象），也不能访问所属类的实例对象和实例方法，（也就是static只能调用static）。而且因为static方法独立于任何实例，因此static方法必须被实现，而不能是抽象的abstract。</p>
+<h4 id="静态代码块"><a href="#静态代码块" class="headerlink" title="静态代码块"></a>静态代码块</h4><p>在Java虚拟机加载类时就会被执行，且只能被执行一次，如果有多个静态代码块，则按顺序执行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">  System.out.println(<span class="string">"我是静态代码块，我在类加载时被执行"</span>)；</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">  System.out.println(<span class="string">"我也是静态代码块，但我比上面那哥们后执行"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="一个static的例子"><a href="#一个static的例子" class="headerlink" title="一个static的例子"></a>一个static的例子</h4><p>定义一个Person类，其中有静态变量planet，实例变量age，静态方法getPlanet()，实例方法getAge()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> String planet; <span class="comment">// 静态变量，可以通过Person.planet访问</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> age; <span class="comment">// 实例变量，必须先实例化Person，再访问该变量</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> age; <span class="comment">// 实例方法，必须实例化后再使用</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getPlanet</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> planet; <span class="comment">// 只能访问static变量，而不能访问age</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>访问静态变量planet-&gt; String humanPlanet = Person.planet;</li>
+<li>访问静态方法getPlanet-&gt; String humanPlanet = Person.getPlanet();</li>
+<li>访问实例变量age-&gt; Person diluo = new Person(); int diluoAge = diluo.age();</li>
+<li>访问实例方法getAge()-&gt; int diluoAge = diluo.getAge();</li>
+</ul>
+<h4 id="静态类（静态内部类）"><a href="#静态类（静态内部类）" class="headerlink" title="静态类（静态内部类）"></a>静态类（静态内部类）</h4><p>当我们要定义一个静态类的时候，只有一种情况，那就是静态内部类。在类的外部定义一个Static的类，编译器会报错。</p>
+<ol>
+<li>静态内部类只能访问静态的成员变量和方法，而不能访问普通成员和方法。普通内部类可以访问任何外部类的成员变量和方法（包括静态和非静态）。</li>
+<li>静态内部类中可以声明普通成员变量和方法，而普通内部类中不能声明静态成员变量和方法。</li>
+<li>静态内部类可以单独初始化。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Inner i = <span class="keyword">new</span> Outer.Inner();</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>但普通内部类必须先实例化外部类。（这是因为静态类可以直接由类名访问，与静态变量、方法等是一致的）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Outer o = <span class="keyword">new</span> Outer();</span><br><span class="line">Inner i = o.new Inner();</span><br></pre></td></tr></table></figure>
+
+<p>使用场景：当外部类需要知道内部类，而内部类无需外部类的资源，且内部类可以单独创建时。</p>
+<p>《Effective Java》中有详细描写。</p>
+<h3 id="final"><a href="#final" class="headerlink" title="final"></a>final</h3><p>final关键词意思为“终结的、不可修改的”，被final定义的任何东西都不能被覆盖和修改。</p>
+<h4 id="final类"><a href="#final类" class="headerlink" title="final类"></a>final类</h4><p>不能被继承，成员方法也默认为final的。如果设计时一个类的设计细节不能被改变，也不能有子类，不能被拓展，那么应该设计成一个final类。</p>
+<h4 id="final方法"><a href="#final方法" class="headerlink" title="final方法"></a>final方法</h4><p>如果一个类不允许子类覆盖其某个方法，那么应该将该方法声明为final方法。</p>
+<ol>
+<li>final方法不允许被改变，其意义和实现一直被保留</li>
+<li>编译器遇到final方法时，不会为其启用多态，因而执行效率非常高</li>
+<li>final方法可以被继承，不能被重写(override)</li>
+</ol>
+<h4 id="final变量"><a href="#final变量" class="headerlink" title="final变量"></a>final变量</h4><p>final变量是个常量。一旦被初始化，就一定不能改变。但可以先声明，在类初始化的同时初始化这个final变量。final修饰的如果是基本数据类型(Primitive Type)，则这个变量不能改变；修饰的如果是引用类型(Object Reference Type)，在引用类型中存放的是地址，所以final只是使其地址不可改变，这个地址所指的对象、数组都是可以改变的。</p>
+<h4 id="final参数"><a href="#final参数" class="headerlink" title="final参数"></a>final参数</h4><p>传递一个final参数，这个参数不允许被改变。在多线程的环境下，可以保证传入的参数不会被另一线程改变从而改变方法的行为。</p>
+<h3 id="static和final一起用"><a href="#static和final一起用" class="headerlink" title="static和final一起用"></a>static和final一起用</h3><p>static final代表了全局变量，该变量不可改变，可以通过类名访问。</p>
+<p>当它们修饰的是容器对象时，如HashMap，虽然实例不可改变，但容器对象中存放的对象则是可以改变的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> ArrayList&lt;Integer&gt; alStaticFinalVal = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String str = <span class="string">"hello world"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    alStaticFinalVal.add(<span class="number">2</span>); <span class="comment">//此时容器没有被改变，但存放内容被改变了（多了一个2）</span></span><br><span class="line">    str = <span class="string">"goodbye world"</span>; <span class="comment">// Wrong, cannot change the content</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/28/useful-resources/" rel="next" title="Useful Resources">
+                <i class="fa fa-chevron-left"></i> Useful Resources
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/18/Process-and-Thread/" rel="prev" title="Process and Thread">
+                Process and Thread <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/profile-image.jpeg" alt="Di Luo">
+            
+              <p class="site-author-name" itemprop="name">Di Luo</p>
+              <p class="site-description motion-element" itemprop="description">Software Ninjaneer</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/dibugger" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/profile.php?id=100009405004406" target="_blank" title="Facebook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>Facebook</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com/dibugger/" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.linkedin.com/in/dibugger" target="_blank" title="LinkedIn">
+                      
+                        <i class="fa fa-fw fa-linkedin"></i>LinkedIn</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Static"><span class="nav-number">1.</span> <span class="nav-text">Static</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#静态变量"><span class="nav-number">1.1.</span> <span class="nav-text">静态变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静态方法"><span class="nav-number">1.2.</span> <span class="nav-text">静态方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静态代码块"><span class="nav-number">1.3.</span> <span class="nav-text">静态代码块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一个static的例子"><span class="nav-number">1.4.</span> <span class="nav-text">一个static的例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静态类（静态内部类）"><span class="nav-number">1.5.</span> <span class="nav-text">静态类（静态内部类）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#final"><span class="nav-number">2.</span> <span class="nav-text">final</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#final类"><span class="nav-number">2.1.</span> <span class="nav-text">final类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#final方法"><span class="nav-number">2.2.</span> <span class="nav-text">final方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#final变量"><span class="nav-number">2.3.</span> <span class="nav-text">final变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#final参数"><span class="nav-number">2.4.</span> <span class="nav-text">final参数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#static和final一起用"><span class="nav-number">3.</span> <span class="nav-text">static和final一起用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Di Luo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Some shortest path problems notes, including Dijkstra Algorithm, Floyd-Warshall Algorithm, etc.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shortest Paths Problems">
+<meta property="og:url" content="http://dibugger.github.io/2016/11/27/shortest-path-problem/index.html">
+<meta property="og:site_name" content="dibugger">
+<meta property="og:description" content="Some shortest path problems notes, including Dijkstra Algorithm, Floyd-Warshall Algorithm, etc.">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-09-17T05:10:38.225Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Shortest Paths Problems">
+<meta name="twitter:description" content="Some shortest path problems notes, including Dijkstra Algorithm, Floyd-Warshall Algorithm, etc.">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://dibugger.github.io/2016/11/27/shortest-path-problem/">
+
+
+
+
+
+  <title>Shortest Paths Problems | dibugger</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">dibugger</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2016/11/27/shortest-path-problem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Di Luo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/profile-image.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dibugger">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Shortest Paths Problems</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-27T15:39:10-08:00">
+                2016-11-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index">
+                    <span itemprop="name">Algorithm</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">Some shortest path problems notes, including Dijkstra Algorithm, Floyd-Warshall Algorithm, etc.</blockquote>
+<a id="more"></a>
+
+<h2 id="Single-Source-Shortest-Paths-SSSP"><a href="#Single-Source-Shortest-Paths-SSSP" class="headerlink" title="Single-Source-Shortest-Paths (SSSP)"></a>Single-Source-Shortest-Paths (SSSP)</h2><h3 id="Dijkstra-Algorithm-a-greedy-algorithm"><a href="#Dijkstra-Algorithm-a-greedy-algorithm" class="headerlink" title="Dijkstra Algorithm - a greedy algorithm"></a>Dijkstra Algorithm - a greedy algorithm</h3><p>Prerequisite:</p>
+<ol>
+<li>Both directed and undirected graphs.</li>
+<li>All edges should be non-negative.</li>
+<li>Graph should be connected.</li>
+</ol>
+<h4 id="Method-1-similar-to-BFS：-O-n-2log-n"><a href="#Method-1-similar-to-BFS：-O-n-2log-n" class="headerlink" title="Method 1 - similar to BFS：- O(n^2log(n))"></a>Method 1 - similar to BFS：- O(n^2log(n))</h4><ol>
+<li>initialize the array <em>dist</em> as follows: <em>dist[s]=0 (from s to s), dist[v]=&infin;(from s to v)</em></li>
+<li>create a queue, add the source vertex to the queue, get a vertex <em>u</em> from queue (process the vertices level by level)</li>
+<li>for all the adjacent vertices of <em>u</em>, if <em>dist[u] + graph[u][v] &lt; dist[v]</em>, then update the dist[v].</li>
+<li>if the v is not in the queue, put the vertex v into the queue, continue 2,3,4 until the queue is empty</li>
+</ol>
+<p>Difficulty: How to determine if an element is in the queue in step 3.</p>
+<h4 id="Method-2-use-minQueue-O-E-V-log-V"><a href="#Method-2-use-minQueue-O-E-V-log-V" class="headerlink" title="Method 2 - use minQueue - O(|E| + |V|log|V|)"></a>Method 2 - use minQueue - O(|E| + |V|log|V|)</h4><ol>
+<li>initialize the array <em>dist</em> as follows: <em>dist[s]=0 (from s to s), dist[v]=&infin;(from s to v)</em></li>
+<li>create a minQueue, put all vertices into it (put all dist[v] into it)</li>
+<li>poll a vertex u from minQueue</li>
+<li>for all the adjacent vertices of u, if <em>dist[u] + graph[u][v] &lt; dist[v]</em>, then update the dist[v] in minHeap.</li>
+<li>repeat step 3,4 until the minQueue is empty</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">input: source: s, Vertex set: V, adjacent list: Adj[*], edge length: length(v,w)</span><br><span class="line">output: the shortest path set: dist[*], the path recovery array: parent[*] (all initialized to Nil)</span><br><span class="line">begin:</span><br><span class="line"></span><br><span class="line">foreach vertex v in V do</span><br><span class="line">  Dist[v] &lt;- &amp;infin;</span><br><span class="line">endfor</span><br><span class="line"></span><br><span class="line">dist[s] &lt;- 0;</span><br><span class="line"></span><br><span class="line">create an empty minQueue Q;</span><br><span class="line"></span><br><span class="line">initialize Q with each z in V having the priority dist[z]</span><br><span class="line"></span><br><span class="line">repeat:</span><br><span class="line">  v &lt;- deletemin(Q)</span><br><span class="line">  foreach vertex w in Adj[v] do</span><br><span class="line">    if (dist[v] + length(v,w) &lt; dist[w])</span><br><span class="line">      dist[w] &lt;- dist[v] + length(v,w)</span><br><span class="line">      &#123;update the vertex w in the min queue&#125;</span><br><span class="line">      parent[w] &lt;- v &#123;means that w is from v, used for path recovery&#125;</span><br><span class="line">    endif</span><br><span class="line">  endfor</span><br><span class="line">until Q is empty</span><br></pre></td></tr></table></figure>
+
+<p><strong>Path Recovery</strong></p>
+<p>follow the path of edges backwards from <em>v</em> to <em>parent[v]</em> to <em>parent[parent[v]]</em> to … to <em>s</em>. (union find?)</p>
+<h2 id="All-Pairs-Shortest-Paths-APSP"><a href="#All-Pairs-Shortest-Paths-APSP" class="headerlink" title="All-Pairs-Shortest-Paths (APSP)"></a>All-Pairs-Shortest-Paths (APSP)</h2><p>Restriction: The graph cannot have any cycles with edge costs that sum up to give a negative “cycle length”.</p>
+<p>Proof: If there exists such a cycle, then by running around the cycle multiple times, the total edge costs will become smaller and smaller, which may reach -&infin; at the end.</p>
+<h3 id="The-Floyd-Warshall-Algorithm"><a href="#The-Floyd-Warshall-Algorithm" class="headerlink" title="The Floyd-Warshall Algorithm"></a>The Floyd-Warshall Algorithm</h3><h4 id="Calculate-shortest-value"><a href="#Calculate-shortest-value" class="headerlink" title="Calculate shortest value"></a>Calculate shortest value</h4><p>Define:</p>
+<blockquote>
+<p><em>PKost[k](i,j)</em> is the shortest path from vertex <em>i</em> to vertex <em>j</em>, where the solution path should have all vertices in the set <em>{1,2,3,…,k}</em></p>
+</blockquote>
+<p>For <em>PKost[k](i,j)</em>, we have two possibilities:</p>
+<ul>
+<li>Do not use vertex <em>k</em>, so  <em>PKost[k](i,j) = PKost[k-1](i,j)</em></li>
+<li>Use vertex <em>k</em>, so <em>PKost[k](i,j) = PKost[k-1](i,k) + PKost[k-1](k,j)</em></li>
+</ul>
+<p>Taking the base case into consideration, we have:</p>
+<ul>
+<li><em>PKost[k](i,j) = EdgeCost[i,j], when k = 0</em></li>
+<li><em>PKost[k](i,j) = min(PKost[k-1](i,j), PKost[k-1](i,k) + PKost[k-1](k,j)), when k != 0</em></li>
+</ul>
+<p>And the solution of ASAP is <strong><em>PKost[n](i,j).</em></strong></p>
+<p>Improvements:</p>
+<ul>
+<li>Builds <em>n+1</em> lookup tables, where <em>KOST[k][i,j]</em> store the length <em>PKost[k](i,j)</em>. Equation: for (k,i,j) from 1 to n sequentially (三重循环), <em>KOST[k][i,j] = min(KOST[k-1][i,j], KOST[k-1][i,k] + KOST[k-1][k,j])</em>. <strong>Running time: O(n^3), Space: O(n^3)</strong>.</li>
+<li>Ignore index <em>k</em> in <em>KOST[k][i,j]</em>. Equation: for (k,i,j) from 1 to n sequentially (三重循环), <em>Pcost[i,j] = min(Pcost[i][j], Pcost[i][k] + Post[k][j])</em>. <strong>Running time: O(n^3), Space: O(n^2)</strong>.</li>
+</ul>
+<p>Pseudocode:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Procedure F-W(n, Ecost[1..n, 1..n];;Pcost[1..n, 1..n])</span><br><span class="line">   input: Ecost[i,j] is the cost of the edge (i,j), and its infinite if (i,j) is not an edge in G</span><br><span class="line">   output: Pcost[i,j] is the length of the shortest path from i to j in G</span><br><span class="line">  Set each of the n^2 values Pcost[i,j] to Ecost[i,j]</span><br><span class="line">  for k &lt;- 1 to n do</span><br><span class="line">    for i &lt;- 1 to n do</span><br><span class="line">       for j &lt;- 1 to n do</span><br><span class="line">        Pcost[i,j] &lt;- min(Pcost[i,j], Pcost[i,k] + Pcost[k,j])</span><br><span class="line">      endfor</span><br><span class="line">    endfor</span><br><span class="line">  endfor</span><br><span class="line"> end F-W;</span><br><span class="line">EndProcedure</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[][] graph = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">128</span>][<span class="number">128</span>]; <span class="comment">// a weighted graph</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> Floyd-Warshall() &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; n; k++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++)</span><br><span class="line">        graph[i][j] = Math.min(graph[i][j], graph[i][k] + graph[k][j]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Proof-of-the-correctness-of-F-W-algorithm"><a href="#Proof-of-the-correctness-of-F-W-algorithm" class="headerlink" title="Proof of the correctness of F-W algorithm:"></a>Proof of the correctness of F-W algorithm:</h5><p>Loop invariant: After the k-th iteration of outer loop has finished, graph[i][j] contains D(k,i,j) for all i and j, where D(k,i,j) is the shortest path between vertex i and vertex j when vertices {0,1,…,k} are allowed to used.</p>
+<p>Use induction reasoning:</p>
+<ol>
+<li>k = 0, the invariant is true because graph[i][j] contains the length from vertex i to vertex j, with no intermediate vertex used.</li>
+<li>Suppose the invariant is true after (k-1) iterations,</li>
+<li>For the k-th iteration, graph[i][j] will either not change (if the shortest path does not use vertex k), or it will change to graph[i][k] + graph[k][j] if it improves the distance.</li>
+</ol>
+<h5 id="Why-the-order-of-loop-k-i-j-is-important"><a href="#Why-the-order-of-loop-k-i-j-is-important" class="headerlink" title="Why the order of loop (k, i, j) is important?"></a>Why the order of loop (k, i, j) is important?</h5><p>If we transpose the loops , say (i, j, k), then for pair (1,2), the possible paths will be (1-&gt;2), (1-&gt;3-&gt;2), (1-&gt;4-&gt;2), …, (1-&gt;n-&gt;2), which is wrong.</p>
+<h5 id="Variant-1-Graph-reachability-determine-if-vertex-i-can-reach-vertex-j"><a href="#Variant-1-Graph-reachability-determine-if-vertex-i-can-reach-vertex-j" class="headerlink" title="Variant 1: Graph reachability - determine if vertex i can reach vertex j"></a>Variant 1: Graph reachability - determine if vertex i can reach vertex j</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[][] graph = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">128</span>][<span class="number">128</span>]; <span class="comment">// a graph, 0 -&gt; not reachable, 1 -&gt; reachable</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> Floyd-Warshall() &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; n; k++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++)</span><br><span class="line">        graph[i][j] = graph[i][j] || (graph[i][k] &amp;&amp; graph[k][j]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Path-recovery"><a href="#Path-recovery" class="headerlink" title="Path recovery"></a>Path recovery</h4><p>Use a two dimensional array <em>kIntermidiate[i,j]</em> to store the <em>k</em> value of pair (i,j), which means that to get to <em>j</em>, the shortest path should get to <em>k</em> first. i -&gt; k -&gt; j.</p>
+<p>Modified the F-W algorithm to generate the <em>kIntermidiate[i,j]</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Before line 5, initial kIntermidiate[i,j] as follows:</span><br><span class="line">if (i,j) has an edge, assign 0;</span><br><span class="line">else assign -1;</span><br><span class="line"></span><br><span class="line">In the loop:</span><br><span class="line">if (Pcost[i,j] &gt; Pcost[i,k] + Pcost[k,j]) then</span><br><span class="line">  Pcost[i,j] = Pcost[i,k] + Pcost[k,j]</span><br><span class="line">  kIntermidiate[i,j] = k</span><br><span class="line">endif</span><br></pre></td></tr></table></figure>
+
+<p>From <em>kIntermidiate</em> reconstruct the shortest path. To process the shortest path from <em>i</em> to <em>j</em>, we should process the subpath from <em>i</em> to <em>kIntermidiate[i,j]</em> and then process the subpath from <em>kIntermidiate[i,j]</em> to <em>j</em>. In this case, we use DFS to solve the problem. As we already know that <em>kIntermidiate[i,j] = k</em>.</p>
+<p>Pseudocode:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 procedure List_Path(i,j)</span><br><span class="line">2 k &lt;- kIntermidiate[i,j]</span><br><span class="line">3 if k == 0 then</span><br><span class="line">4   print(i)</span><br><span class="line">5 else</span><br><span class="line">6   List_Path(i,k)</span><br><span class="line">7   List_Path(k,j)</span><br><span class="line">8 endif</span><br><span class="line">9 end List_Path;</span><br></pre></td></tr></table></figure>
+
+<p>Driver:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if kIntermidiate[i,j] != -1 then</span><br><span class="line">  List_Path(i,j);</span><br><span class="line">  print(j)</span><br></pre></td></tr></table></figure>
+
+<p>Time complexity of Path Recovery: Proportional to the length of the path.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/26/graph-theory/" rel="next" title="Graph Theory">
+                <i class="fa fa-chevron-left"></i> Graph Theory
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/28/useful-resources/" rel="prev" title="Useful Resources">
+                Useful Resources <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/profile-image.jpeg" alt="Di Luo">
+            
+              <p class="site-author-name" itemprop="name">Di Luo</p>
+              <p class="site-description motion-element" itemprop="description">Software Ninjaneer</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/dibugger" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/profile.php?id=100009405004406" target="_blank" title="Facebook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>Facebook</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com/dibugger/" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.linkedin.com/in/dibugger" target="_blank" title="LinkedIn">
+                      
+                        <i class="fa fa-fw fa-linkedin"></i>LinkedIn</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Single-Source-Shortest-Paths-SSSP"><span class="nav-number">1.</span> <span class="nav-text">Single-Source-Shortest-Paths (SSSP)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Dijkstra-Algorithm-a-greedy-algorithm"><span class="nav-number">1.1.</span> <span class="nav-text">Dijkstra Algorithm - a greedy algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Method-1-similar-to-BFS：-O-n-2log-n"><span class="nav-number">1.1.1.</span> <span class="nav-text">Method 1 - similar to BFS：- O(n^2log(n))</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Method-2-use-minQueue-O-E-V-log-V"><span class="nav-number">1.1.2.</span> <span class="nav-text">Method 2 - use minQueue - O(|E| + |V|log|V|)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#All-Pairs-Shortest-Paths-APSP"><span class="nav-number">2.</span> <span class="nav-text">All-Pairs-Shortest-Paths (APSP)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Floyd-Warshall-Algorithm"><span class="nav-number">2.1.</span> <span class="nav-text">The Floyd-Warshall Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Calculate-shortest-value"><span class="nav-number">2.1.1.</span> <span class="nav-text">Calculate shortest value</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Proof-of-the-correctness-of-F-W-algorithm"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">Proof of the correctness of F-W algorithm:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Why-the-order-of-loop-k-i-j-is-important"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">Why the order of loop (k, i, j) is important?</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Variant-1-Graph-reachability-determine-if-vertex-i-can-reach-vertex-j"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">Variant 1: Graph reachability - determine if vertex i can reach vertex j</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Path-recovery"><span class="nav-number">2.1.2.</span> <span class="nav-text">Path recovery</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Di Luo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

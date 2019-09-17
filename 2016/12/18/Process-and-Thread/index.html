@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Basic knowledge of process and thread.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Process and Thread">
+<meta property="og:url" content="http://dibugger.github.io/2016/12/18/Process-and-Thread/index.html">
+<meta property="og:site_name" content="dibugger">
+<meta property="og:description" content="Basic knowledge of process and thread.">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://dibugger.github.io/images/post_images/Process-and-Thread/Three-State.png">
+<meta property="og:image" content="http://dibugger.github.io/images/post_images/Process-and-Thread/Five-State.png">
+<meta property="og:image" content="http://dibugger.github.io/images/post_images/Process-and-Thread/priority_scheduler.png">
+<meta property="og:updated_time" content="2019-09-17T05:10:38.225Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Process and Thread">
+<meta name="twitter:description" content="Basic knowledge of process and thread.">
+<meta name="twitter:image" content="http://dibugger.github.io/images/post_images/Process-and-Thread/Three-State.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://dibugger.github.io/2016/12/18/Process-and-Thread/">
+
+
+
+
+
+  <title>Process and Thread | dibugger</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">dibugger</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2016/12/18/Process-and-Thread/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Di Luo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/profile-image.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dibugger">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Process and Thread</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-18T11:43:55-08:00">
+                2016-12-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Operating-Systems/" itemprop="url" rel="index">
+                    <span itemprop="name">Operating Systems</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">Basic knowledge of process and thread.</blockquote>
+<a id="more"></a>
+
+<p>A good article written in Chinese about Process and Thread. <a href="http://www.ruanyifeng.com/blog/2013/04/processes_and_threads.html" target="_blank" rel="noopener">Click here</a></p>
+<h1 id="Process"><a href="#Process" class="headerlink" title="Process"></a>Process</h1><h2 id="Definition"><a href="#Definition" class="headerlink" title="Definition"></a>Definition</h2><p>A process is just an instance of an existing program, including the current value of the program counter, registers, and variables. Conceptually, each process has its own CPU.</p>
+<p>Each process will have its own address space and one or more threads.</p>
+<h2 id="Difference-between-a-program-and-a-process"><a href="#Difference-between-a-program-and-a-process" class="headerlink" title="Difference between a program and a process"></a>Difference between a program and a process</h2><ul>
+<li>A program is a combination of certain data, data structures and algorithms. It is an object which is stored in disk, not doing anything.</li>
+<li>A process is a running instance of the program, it specify the activity of the program. It is an activity which may has a program, input, output and a state.</li>
+<li>If a program is running twice, it counts as two processes.</li>
+</ul>
+<h2 id="Process-creation-and-termination"><a href="#Process-creation-and-termination" class="headerlink" title="Process creation and termination"></a>Process creation and termination</h2><p>Creation:</p>
+<ul>
+<li>System initialization</li>
+<li>Execution of a process creation system call by a running process (In UNIX, a fork system call is the only one to create process)</li>
+<li>A user request to create a new process</li>
+<li>Initiation of a batch job</li>
+</ul>
+<h2 id="Process-State"><a href="#Process-State" class="headerlink" title="Process State"></a>Process State</h2><p>A Three-State Model (the most simplified one)</p>
+<p><img src="/images/post_images/Process-and-Thread/Three-State.png"><br>States:</p>
+<ul>
+<li>Running (actually using the CPU at that instant)</li>
+<li>Ready (runnable; temporarily stop to let another process execute)</li>
+<li>Blocked (unable to run until some external event happens)</li>
+</ul>
+<p>Actions:</p>
+<ol>
+<li>process blocks for input</li>
+<li>scheduler picks another process</li>
+<li>scheduler picks this process</li>
+<li>input becomes avaliable</li>
+</ol>
+<p>Termination:</p>
+<ul>
+<li>Normal exit (voluntary)</li>
+<li>Error exit (voluntary)</li>
+<li>Fatal exit (voluntary)</li>
+<li>Killed by another process (involuntary)</li>
+</ul>
+<p>A more complicated Five-State Model</p>
+<p><img src="/images/post_images/Process-and-Thread/Five-State.png"></p>
+<h2 id="Process-table"><a href="#Process-table" class="headerlink" title="Process table"></a>Process table</h2><p>OS maintain a table which is an array of structures, in which an entry is called a <strong>process control block</strong>.</p>
+<p>An entry contains all information which specify a certain process:</p>
+<ul>
+<li>program counter</li>
+<li>stack pointer</li>
+<li>memory allocation</li>
+<li>the status of its open files</li>
+<li>its accounting and scheduling information</li>
+<li>everything else that must be saved when process switches its state</li>
+</ul>
+<h2 id="Interprocess-communication-The-same-problems-and-solutions-apply-to-Threads"><a href="#Interprocess-communication-The-same-problems-and-solutions-apply-to-Threads" class="headerlink" title="Interprocess communication (The same problems and solutions apply to Threads)"></a>Interprocess communication (The same problems and solutions apply to Threads)</h2><p>Processes working together may share some common storage, disk, memory or shared files.</p>
+<p><strong>Problem</strong>: race condition. If two processes are trying to access the same position, it will cause collision.</p>
+<p><strong>Solution</strong>: critical regions. The shared memory that a process is using is called critical region, no other processes can access this region until the process finish its job.</p>
+<p>See <a href="/2016/12/18/Deadlock/">here</a> for more about the critical regions and issues of concurrency.</p>
+<h2 id="Address-Space"><a href="#Address-Space" class="headerlink" title="Address Space"></a>Address Space</h2><p>Defines where sections of data and code are located in 32 or 64 address space. Defines protection of such sections. It is a range of discrete addresses, all memory the a process can address.</p>
+<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><h4 id="Base-and-limit"><a href="#Base-and-limit" class="headerlink" title="Base and limit"></a>Base and limit</h4><ul>
+<li>Map each process address space onto a different part onto a physical memory.</li>
+<li>Base: start address of a program in physical memory</li>
+<li>Limit: length of the program</li>
+<li>Only OS can modify the base and limit registers</li>
+</ul>
+<p>Drawbacks: need to add and compare for each memory address</p>
+<h1 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a>Thread</h1><h2 id="Definition-1"><a href="#Definition-1" class="headerlink" title="Definition"></a>Definition</h2><p>Basically a thread is a process within the process. A thread is the minimum processing unit. (But the process is the unit of resource management, which means that resource can be visible to all threads within it.) Multiple threads within a process share the same address space and have their own stacks.</p>
+<h2 id="Why-do-we-need-threads"><a href="#Why-do-we-need-threads" class="headerlink" title="Why do we need threads?"></a>Why do we need threads?</h2><ul>
+<li>We need the ability for the parallel entities to share an address space and all its data among themselves.</li>
+<li>They are lighter weight than processes, easy to create and destroy.</li>
+<li>Threads yield performance augment when they are I/O bound, allowing themselves to overlap.</li>
+</ul>
+<h2 id="Common-address-space-and-separate-stacks"><a href="#Common-address-space-and-separate-stacks" class="headerlink" title="Common address space and separate stacks"></a>Common address space and separate stacks</h2><p>Threads share common address space and have their own separate stacks. With these properties, threads can interact with each other with a common target but also can deal with different tasks separately.</p>
+<p>per-process items:</p>
+<ul>
+<li>address space</li>
+<li>global variables</li>
+<li>open files</li>
+<li>child processes</li>
+<li>pending alarms</li>
+<li>signals and signal handlers</li>
+<li>accounting information</li>
+</ul>
+<p>per-thread items:</p>
+<ul>
+<li>program counter</li>
+<li>stack</li>
+<li>state</li>
+<li>register</li>
+</ul>
+<h2 id="Two-places-to-implement-threads"><a href="#Two-places-to-implement-threads" class="headerlink" title="Two places to implement threads"></a>Two places to implement threads</h2><h3 id="User-space"><a href="#User-space" class="headerlink" title="User space"></a>User space</h3><p>User space is a set of contiguous space in memory, where the applications are running on. Threads package can be put entirely in user space.</p>
+<p><strong>Advantages</strong>:</p>
+<ul>
+<li>Threads can be implemented in an operating system even if it does not support thread, because the kernel knows nothing about the threads but a single process.</li>
+<li>Threads switch does not require kernel mode</li>
+<li>Scheduling can be application specify as the OS schedule the application as a whole process.</li>
+<li>Scale better.</li>
+</ul>
+<p><strong>Disadvantages</strong>:</p>
+<ul>
+<li>A system call of one thread can block other threads.</li>
+<li>Page fault block the whole threads.</li>
+<li>Cannot take advantage of multiprocessing.</li>
+</ul>
+<h3 id="Kernel-space"><a href="#Kernel-space" class="headerlink" title="Kernel space"></a>Kernel space</h3><p>Kernel space is a part of memory where the kernel is stored and executes under. Applications are not allowed to touch the kernel space. The only way they can do to request a kernel service is through the <strong>System Call</strong>.</p>
+<p>Thread management is done by the OS. (The Windows Operating System)</p>
+<p>Advantages:</p>
+<ul>
+<li>A blocked thread has no influence on other threads, OS can continue to schedule other threads.</li>
+<li>multiprocessing</li>
+</ul>
+<p>Disadvantages:</p>
+<ul>
+<li>Cost of System calls is very high</li>
+</ul>
+<h3 id="Combined-approach"><a href="#Combined-approach" class="headerlink" title="Combined approach"></a>Combined approach</h3><p>A combination of user space and kernel space implementation, example: Solaris.</p>
+<h1 id="Process-vs-Thread"><a href="#Process-vs-Thread" class="headerlink" title="Process vs Thread"></a>Process vs Thread</h1><ul>
+<li><p>The process is the unit of resource management or ownership.</p>
+</li>
+<li><p>The thread is the unit of dispatching for CPU.</p>
+</li>
+<li><p>Process has private address space, which provides protection among processes.</p>
+</li>
+<li><p>Threads share common address space with others within the same process but have their own stacks. No protection between threads.</p>
+</li>
+<li><p>A process should have one or more threads.</p>
+</li>
+<li><p>A thread should be within a process and it is lighter weight which means that a thread is easier to create, delete and use.</p>
+</li>
+</ul>
+<h1 id="Multiprogramming-vs-Multithreading"><a href="#Multiprogramming-vs-Multithreading" class="headerlink" title="Multiprogramming vs Multithreading"></a>Multiprogramming vs Multithreading</h1><p>Multiprogramming: multiple different programs run on a uniprocessor machine.</p>
+<p>Multithreading: different threads within a process perform similar type of functions.</p>
+<h1 id="Process-Scheduling"><a href="#Process-Scheduling" class="headerlink" title="Process Scheduling"></a>Process Scheduling</h1><h2 id="When-to-schedule"><a href="#When-to-schedule" class="headerlink" title="When to schedule?"></a>When to schedule?</h2><ul>
+<li>when a process is created</li>
+<li>when a process exists</li>
+<li>when a process blocks</li>
+<li>when an I/O interrupt occurs</li>
+</ul>
+<h2 id="How-to-measure-“scheduling”"><a href="#How-to-measure-“scheduling”" class="headerlink" title="How to measure “scheduling”"></a>How to measure “scheduling”</h2><ul>
+<li>Turnaround Time</li>
+<li>Throughput: jobs per second</li>
+<li>Response Time: Interactive</li>
+<li>Average Wait Times</li>
+<li>Fairness</li>
+<li>Balanced: keep all parts of the system busy</li>
+<li>CPU utilization</li>
+</ul>
+<h2 id="Scheduling-Schemes"><a href="#Scheduling-Schemes" class="headerlink" title="Scheduling Schemes"></a>Scheduling Schemes</h2><h3 id="First-Come-First-Serve-non-preemptive"><a href="#First-Come-First-Serve-non-preemptive" class="headerlink" title="First Come First Serve: non-preemptive"></a>First Come First Serve: non-preemptive</h3><ul>
+<li>CPU choose a process to run in front of the ready queue.</li>
+<li>New process is put to the back of the ready queue.</li>
+<li>A blocked process that becomes ready added to the end of the ready queue.</li>
+</ul>
+<p>Can hurt I/O bound process as they are put to the end of the ready queue frequently and get little cpu time.</p>
+<h3 id="Shortest-Job-First-non-preemptive"><a href="#Shortest-Job-First-non-preemptive" class="headerlink" title="Shortest Job First: non-preemptive"></a>Shortest Job First: non-preemptive</h3><ul>
+<li>Always select the job with shortest time</li>
+<li>CPU time of each job should be known in advance, which is not possible in reality.</li>
+</ul>
+<p>Can starve certain jobs if jobs with shorter time arrive constantly</p>
+<h3 id="Shortest-Remaining-Time-Next-preemptive"><a href="#Shortest-Remaining-Time-Next-preemptive" class="headerlink" title="Shortest Remaining Time Next: preemptive"></a>Shortest Remaining Time Next: preemptive</h3><ul>
+<li>CPU always select those jobs with shortest remaining time</li>
+<li>Runtime has to be known in advance (not possible again)</li>
+</ul>
+<h3 id="Round-Robin-preemptive"><a href="#Round-Robin-preemptive" class="headerlink" title="Round Robin: preemptive"></a>Round Robin: preemptive</h3><ul>
+<li>Each process is assigned a time interval: quantum (the time that the process can own CPU)</li>
+<li>After a quantum, the CPU is given to another process. The previous process should be put to the end of the queue.</li>
+<li>Quantum too short - requires a lot of costly context switches</li>
+<li>Quantum too long - poor response interactive time (the last process may have to wait for a long time before it can get a cpu time)</li>
+<li>quantum should be longer than the mean cpu burst, in order to avoid constant preemption, which results in frequent context switches.</li>
+</ul>
+<p>CPU burst is the cpu time that a process needs to use before it performs I/O or other operations. Quantum is the time that CPU can offer to a process to use.</p>
+<h3 id="Priority-Scheduler-preemptive"><a href="#Priority-Scheduler-preemptive" class="headerlink" title="Priority Scheduler: preemptive"></a>Priority Scheduler: preemptive</h3><ul>
+<li>Each process will have a priority field.</li>
+<li>Processes with the same priority gather together.</li>
+<li>CPU choose process from a higher priority, once a process is selected, it decrease its priority by 1. When the priority is less than 1, it reset to its original priority.</li>
+<li>A process with a higher priority can preempt the one with a lower priority.</li>
+<li>Use time quantum also.</li>
+</ul>
+<p><img src="/images/post_images/Process-and-Thread/priority_scheduler.png"></p>
+<h3 id="Lottery-scheduler"><a href="#Lottery-scheduler" class="headerlink" title="Lottery scheduler"></a>Lottery scheduler</h3><ul>
+<li>Each process has a certain number of tickets</li>
+<li>The more tickets a process has, the higher priority it is.</li>
+<li>Can trade tickets.</li>
+</ul>
+<p>Starvation problem.</p>
+<h3 id="Fair-Shared-scheduler"><a href="#Fair-Shared-scheduler" class="headerlink" title="Fair Shared scheduler"></a>Fair Shared scheduler</h3><ul>
+<li>Schedule not only based on individual process, but process’s owner.</li>
+<li>N users, each user may have different # of processes.</li>
+</ul>
+<p>番外：<br>Booting Sequence:</p>
+<ol>
+<li>BIOS starts</li>
+<li>BIOS determine the booting device</li>
+<li>The first sector of the booting device is read into memory and executed to determine active partition</li>
+<li>Secondary boot loader is loaded from the active partition</li>
+<li>The loader load the operating system into memory and starts it</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/08/java-static-final/" rel="next" title="Java中static和final的作用和用法">
+                <i class="fa fa-chevron-left"></i> Java中static和final的作用和用法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/18/Deadlock/" rel="prev" title="Deadlock">
+                Deadlock <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/profile-image.jpeg" alt="Di Luo">
+            
+              <p class="site-author-name" itemprop="name">Di Luo</p>
+              <p class="site-description motion-element" itemprop="description">Software Ninjaneer</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/dibugger" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/profile.php?id=100009405004406" target="_blank" title="Facebook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>Facebook</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com/dibugger/" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.linkedin.com/in/dibugger" target="_blank" title="LinkedIn">
+                      
+                        <i class="fa fa-fw fa-linkedin"></i>LinkedIn</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Process"><span class="nav-number">1.</span> <span class="nav-text">Process</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Definition"><span class="nav-number">1.1.</span> <span class="nav-text">Definition</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Difference-between-a-program-and-a-process"><span class="nav-number">1.2.</span> <span class="nav-text">Difference between a program and a process</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Process-creation-and-termination"><span class="nav-number">1.3.</span> <span class="nav-text">Process creation and termination</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Process-State"><span class="nav-number">1.4.</span> <span class="nav-text">Process State</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Process-table"><span class="nav-number">1.5.</span> <span class="nav-text">Process table</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Interprocess-communication-The-same-problems-and-solutions-apply-to-Threads"><span class="nav-number">1.6.</span> <span class="nav-text">Interprocess communication (The same problems and solutions apply to Threads)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Address-Space"><span class="nav-number">1.7.</span> <span class="nav-text">Address Space</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Implementation"><span class="nav-number">1.7.1.</span> <span class="nav-text">Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Base-and-limit"><span class="nav-number">1.7.1.1.</span> <span class="nav-text">Base and limit</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Thread"><span class="nav-number">2.</span> <span class="nav-text">Thread</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Definition-1"><span class="nav-number">2.1.</span> <span class="nav-text">Definition</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-do-we-need-threads"><span class="nav-number">2.2.</span> <span class="nav-text">Why do we need threads?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Common-address-space-and-separate-stacks"><span class="nav-number">2.3.</span> <span class="nav-text">Common address space and separate stacks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Two-places-to-implement-threads"><span class="nav-number">2.4.</span> <span class="nav-text">Two places to implement threads</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#User-space"><span class="nav-number">2.4.1.</span> <span class="nav-text">User space</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kernel-space"><span class="nav-number">2.4.2.</span> <span class="nav-text">Kernel space</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Combined-approach"><span class="nav-number">2.4.3.</span> <span class="nav-text">Combined approach</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Process-vs-Thread"><span class="nav-number">3.</span> <span class="nav-text">Process vs Thread</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Multiprogramming-vs-Multithreading"><span class="nav-number">4.</span> <span class="nav-text">Multiprogramming vs Multithreading</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Process-Scheduling"><span class="nav-number">5.</span> <span class="nav-text">Process Scheduling</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#When-to-schedule"><span class="nav-number">5.1.</span> <span class="nav-text">When to schedule?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-measure-“scheduling”"><span class="nav-number">5.2.</span> <span class="nav-text">How to measure “scheduling”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scheduling-Schemes"><span class="nav-number">5.3.</span> <span class="nav-text">Scheduling Schemes</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#First-Come-First-Serve-non-preemptive"><span class="nav-number">5.3.1.</span> <span class="nav-text">First Come First Serve: non-preemptive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shortest-Job-First-non-preemptive"><span class="nav-number">5.3.2.</span> <span class="nav-text">Shortest Job First: non-preemptive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shortest-Remaining-Time-Next-preemptive"><span class="nav-number">5.3.3.</span> <span class="nav-text">Shortest Remaining Time Next: preemptive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Round-Robin-preemptive"><span class="nav-number">5.3.4.</span> <span class="nav-text">Round Robin: preemptive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Priority-Scheduler-preemptive"><span class="nav-number">5.3.5.</span> <span class="nav-text">Priority Scheduler: preemptive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lottery-scheduler"><span class="nav-number">5.3.6.</span> <span class="nav-text">Lottery scheduler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fair-Shared-scheduler"><span class="nav-number">5.3.7.</span> <span class="nav-text">Fair Shared scheduler</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Di Luo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
