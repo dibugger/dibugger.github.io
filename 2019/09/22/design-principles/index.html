@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="A summary of six design principles with examples: Single Responsibility Principle, Liskov Substitution Principle, Dependency Inversion Principle, Interface Separation Principle, Dmitry&apos;s Principle and">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Design Principles">
+<meta property="og:url" content="http://dibugger.github.io/2019/09/22/design-principles/index.html">
+<meta property="og:site_name" content="dibugger">
+<meta property="og:description" content="A summary of six design principles with examples: Single Responsibility Principle, Liskov Substitution Principle, Dependency Inversion Principle, Interface Separation Principle, Dmitry&apos;s Principle and">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://dibugger.github.io/images/post_images/design-principles/large-interface.png">
+<meta property="og:image" content="http://dibugger.github.io/images/post_images/design-principles/small-interface.png">
+<meta property="og:updated_time" content="2019-09-22T19:51:24.818Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Design Principles">
+<meta name="twitter:description" content="A summary of six design principles with examples: Single Responsibility Principle, Liskov Substitution Principle, Dependency Inversion Principle, Interface Separation Principle, Dmitry&apos;s Principle and">
+<meta name="twitter:image" content="http://dibugger.github.io/images/post_images/design-principles/large-interface.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://dibugger.github.io/2019/09/22/design-principles/">
+
+
+
+
+
+  <title>Design Principles | dibugger</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">dibugger</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2019/09/22/design-principles/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Di Luo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/profile-image.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dibugger">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Design Principles</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-22T12:43:40-07:00">
+                2019-09-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Design-Pattern/" itemprop="url" rel="index">
+                    <span itemprop="name">Design Pattern</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">A summary of six design principles with examples: Single Responsibility Principle, Liskov Substitution Principle, Dependency Inversion Principle, Interface Separation Principle, Dmitry's Principle and Open Close Principle. </blockquote>
+<a id="more"></a>
+
+<p>This is my first post of design patterns. I will discuss the famous six principles of design patterns in this post hopefully with some examples. And leave the discussions of specific design patterns to other posts. Feel free to check out other posts under the category <strong>Design Patterns</strong>.</p>
+<h2 id="Single-Responsibility-Principle-SRP"><a href="#Single-Responsibility-Principle-SRP" class="headerlink" title="Single Responsibility Principle (SRP)"></a>Single Responsibility Principle (SRP)</h2><p>Key point: A class should always have only one responsibility.</p>
+<p>Explanation: Class A is responsible for task 1 and task 2. If class A needs to be changed due to the chance of task 1, task 2 might be affected. Therefore, we should have class A which is only responsible for task 1 and class B for task 2.</p>
+<p>SRP seems to be very easy for the first glance and most programmers will follow the principle in their daily work, even though they might not aware of its name. However, even those experienced programmers sometimes can write code that violates this principle, due the increased complexity of the program. For example, a senior software engineer may have a program where class A is responsible for task 1. As the software evolves, task 1 may be subtask 11 and subtask 12. In this case, they might choose to rewrite the class A directly, which is less time-consuming, especially when they are working on a relatively complex system. However, this violates the SRP and might bring unexpected complexity to the system. (What if the task 1 has more subtask or the subtasks are divided into multiple subtasks in the future?) A better way to achieve it is to break class A into two subclasses, probably by making class A a parent class or abstract class, and have class A responsible for subtask 11 and class B for subtask 12. This seems to be very tedious but it definitely worths the effort.</p>
+<p>However, this really depends on the real project you are working on. You don’t have to strictly follow the SRP because of the extra work brought by adjusting the existing classes. There is a simple principle that I follow all the time: always have the design pattern in your mind and do code refactoring as early as possible.</p>
+<h2 id="Liskov-Substitution-Principle-LSP"><a href="#Liskov-Substitution-Principle-LSP" class="headerlink" title="Liskov Substitution Principle (LSP)"></a>Liskov Substitution Principle (LSP)</h2><p>Key point: If S is a subtype of T, then objects of type T can be replaced with objects of type S without altering any of the desired properties of the program (correctness, task performed, etc).</p>
+<p>Subclasses can extend the functionality of their parent classes. But do not alter their parent classes’ existing functions. Overriding parent class’s methods are more dangerous than just adding methods in subclasses. However, this is not without risk. If the parent class acquires a new method and you are very unlucky to have given the same method signature to the subclasses before, the subclass won’t compile.</p>
+<p>This is the fundamental of inheritance. Inheritance brings convenience to programmers but also dangers. Inheritance actually violates another OOD design principle which is encapsulation. From the book Effective Java, there are two best practices to work around this:</p>
+<ul>
+<li><p>Item 18: Favor composition over inheritance</p>
+<p>  A subclass depends on the implementation of its superclass for its proper function. From time to time, the implementation of the superclass will change and breaks the subclass. Therefore, a subclass must evolve in tandem with its superclass, unless the superclass’s authors have designed and documented it specifically for the purpose of being extended.</p>
+<p>  Composition: Give your new class a private field that references an instance of the existing class. Each instance method in the new class invokes the corresponding method on the contained instance of the existing class.</p>
+<p>  Take a look at an example, we want to create an InstrumentedSet class which can count the addition of elements to the set. We can create a forwarding class which contains all of the forwarding methods and nothing else. And have our main class extends the forwarding class and add instrumentation to it. This is also known as the Decorator Pattern because the InstrumentedSet class “decorates” a set by adding instrumentation.</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public class InstrumentedSet&lt;E&gt; extends ForwardingSet&lt;E&gt; &#123;</span><br><span class="line">    private int addCount = 0;</span><br><span class="line">    public InstrumentedSet(Set&lt;E&gt; s) &#123;</span><br><span class="line">        super(s);</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public boolean add(E e) &#123;</span><br><span class="line">        addCount += 1;</span><br><span class="line">        return super.add(e);</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public boolean addAll(Collection&lt;? extends E&gt; c) &#123;</span><br><span class="line">        addCount += c.size();</span><br><span class="line">        return super.addAll(c);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class ForwardingSet&lt;E&gt; implements Set&lt;E&gt; &#123;</span><br><span class="line">    private final Set&lt;E&gt; s;</span><br><span class="line">    public ForwardingSet(Set&lt;E&gt; s) &#123;</span><br><span class="line">        this.s = s;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean add(E e) &#123;</span><br><span class="line">        return s.add(e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean addAll(Collection&lt;? extends E&gt; c) &#123;</span><br><span class="line">        return s.addAll(c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // more implementations of Set below</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Item 19: Design and document for inheritance or else prohibit it</p>
+<p>  A best practice is: never extend a class that is not designed or documented explicitly for inheritance.</p>
+<p>  First, the class must document precisely the effects of overriding any method, including which overridable methods the method invokes, in what sequence, and how the results of each invocation affect subsequent processing.</p>
+<p>  For example, the <em>remove</em> method in java.util.AbstractCollection package relies on the <em>iterator</em> method. Therefore, in the documentation of <em>remove</em> method, there should be a special section called <em>Implementation Requirements</em> to indicate how it works and the effect of overriding iterator method.</p>
+<p>  Constructors must not invoke overridable methods, directly or indirectly. The best solution is to prohibit subclassing in classes that are not designed and documented to be safely subclassed. The first way to achieve this is to make the class a final class. The alternative is to make all the constructors private or package-private and to add public static factories in place of constructors. If inheritance is necessary, try to eliminate the class’s self-use of overridable methods entirely, makes the class reasonably safe to subclass because overriding a method will never affect the behavior of any other method.</p>
+</li>
+</ul>
+<h2 id="Dependency-Inversion-Principle-DIP"><a href="#Dependency-Inversion-Principle-DIP" class="headerlink" title="Dependency Inversion Principle (DIP)"></a>Dependency Inversion Principle (DIP)</h2><p>Key point: Interface-oriented programming</p>
+<p>Problem: Class A depends on class B. If there is a time that class A needs to depend on class C instead of class B, we need to modify class A’s code. However, typically class A is responsible for high level logic and class B and C are responsible for low level operations. Directly modify class A will bring unnecessary threat to the program.</p>
+<p>Solution: Class A depends on interface I and class B and C implement interface I separately. Class A interacts with class B or C through interface I.</p>
+<p>Let’s take an example form my real experience. There is a service that needs to do CRUD operations of a database. However, for future scalability, we have to consider the possibility of changing the underlying database. We can have our PersistentService depends on a DatabaseManager interface. And different database will implement the same DatabaseManager interface, which defines the operations that our PersistentService needs to perform. Any other new database can plugin in this way by implementing the same interface.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public interface DatabaseManager &#123;</span><br><span class="line">    public void saveUser(User user);</span><br><span class="line">    public User getUser(String id);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public RedisManager implements DatabaseManager &#123;</span><br><span class="line"></span><br><span class="line">    public RedisReader redisReader;</span><br><span class="line">    public RedisWriter redisWriter;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void saveUser(User user) &#123;</span><br><span class="line">        redisWriter.write(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public User getUser(String id) &#123;</span><br><span class="line">        return redisReader.get(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class PersistentService &#123;</span><br><span class="line">    private DatabaseManager dbMgr;</span><br><span class="line">    public PersistentService(DatabaseManager dbMgr) &#123;</span><br><span class="line">        this.dbMgr = dbMgr;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>If in some time, we need to change our database from Redis to MongoDB, we just need to write a MongoDBManager class which implements the DatabaseManager interface. And PersistentService can safely use the new MongoDBManager without changing its implementation.</p>
+<h2 id="Interface-Segregation-Principle-ISP"><a href="#Interface-Segregation-Principle-ISP" class="headerlink" title="Interface Segregation Principle (ISP)"></a>Interface Segregation Principle (ISP)</h2><p>Key point: Divide a large interface into multiple small interfaces, each of which is responsible for only a few related operations.</p>
+<p>Class A, B depend on class C, D separately through interface I. Interface I is a large interface with multiple methods. Therefore, class C and D have to implement all methods although not all of them are of interest. make the inheritance structure very clear and easy to maintain.</p>
+<p><img src="/images/post_images/design-principles/large-interface.png"></p>
+<p>We can divide interface I into small interfaces I1, I2, I3. Class B implements I2 and I1 with methods 1, 2, 3 and class D implements I1 and I3 with methods 1, 4, 5. This is very flexible and reduce the size of interface which makes it easier to maintain and extend in the future.</p>
+<p><img src="/images/post_images/design-principles/small-interface.png"></p>
+<h2 id="Dmitry’s-Principle-Least-Knowledge-Principle"><a href="#Dmitry’s-Principle-Least-Knowledge-Principle" class="headerlink" title="Dmitry’s Principle (Least Knowledge Principle)"></a>Dmitry’s Principle (Least Knowledge Principle)</h2><p>Key point: An entity should interact with other entities as least as possible. An object should have the least knowledge of other objects.</p>
+<p>With Dmitry’s Principle, we can have more independent modules, so that when we modify a module, other modules that depend on it will be affected as least as possible. Classes should encapsulate their information within the class as much as possible and provide public methods for others to access.</p>
+<p>If a class jumps more than two times to access another class, you need to think of a way to reconstruct them. The more the number of jumps, the more complex the system and the more difficult to maintain.</p>
+<p>For example, CompanyManager interacts with the SubEmployee through SubCompanyManager. However, CompanyManager doesn’t need to know about the SubEmployee. It can achieve getting all the employees by having the SubCompanyManager to get their own employees and sum up in the CompanyManager class.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">class HqEmployee extends Employee &#123;</span><br><span class="line">    private String id;</span><br><span class="line">    public String getId() &#123;</span><br><span class="line">        return this.id;</span><br><span class="line">    &#125;</span><br><span class="line">    public void setId(String id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class BranchEmployee extends Employee &#123;</span><br><span class="line">    private String id;</span><br><span class="line">    public String getId() &#123;</span><br><span class="line">        return this.id;</span><br><span class="line">    &#125;</span><br><span class="line">    public void setId(String id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Branch &#123;</span><br><span class="line">    private List&lt;BranchEmployee&gt; employees;</span><br><span class="line">    public List&lt;BranchEmployee&gt; getEmployees() &#123;</span><br><span class="line">        return this.employees;</span><br><span class="line">    &#125;</span><br><span class="line">    public void addEmployee(String id) &#123;</span><br><span class="line">        BranchEmployee e = new BranchEmployee();</span><br><span class="line">        e.setId(id);</span><br><span class="line">        employees.add(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class HeadQuarter &#123;</span><br><span class="line">    public void printAllEmployees(List&lt;Branch&gt; branches) &#123;</span><br><span class="line">        for (Branch branch : branches) &#123;</span><br><span class="line">            List&lt;BranchEmployee&gt; branchEmployees = branch.getEmployees();</span><br><span class="line">            for (BranchEmployee e : branchEmployees) &#123;</span><br><span class="line">                System.out.println(e.getId());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>We can modify the Branch to add a printAllEmployees, so that the HeadQuarter class won’t have to interact with the BranchEmployee directly.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">class Branch &#123;</span><br><span class="line">    private List&lt;BranchEmployee&gt; employees;</span><br><span class="line">    public List&lt;BranchEmployee&gt; getEmployees() &#123;</span><br><span class="line">        return this.employees;</span><br><span class="line">    &#125;</span><br><span class="line">    public void addEmployee(String id) &#123;</span><br><span class="line">        BranchEmployee e = new BranchEmployee();</span><br><span class="line">        e.setId(id);</span><br><span class="line">        employees.add(e);</span><br><span class="line">    &#125;</span><br><span class="line">    public void printAllEmployees() &#123;</span><br><span class="line">        for (BranchEmployee e : employees) &#123;</span><br><span class="line">            System.out.println(e.getId());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class HeadQuarter &#123;</span><br><span class="line">    public void printAllEmployees(List&lt;Branch&gt; branches) &#123;</span><br><span class="line">        for (Branch branch : branches) &#123;</span><br><span class="line">            branch.printAllEmployees();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Open-Close-Principle"><a href="#Open-Close-Principle" class="headerlink" title="Open Close Principle"></a>Open Close Principle</h2><p>Key point: A software entity like class, module and function should be open for extension but close for modification.</p>
+<p>Requirements evolve during the life cycle of the software. When there are new requirements, we should try to extend the existing entities instead of modifying them. This principle is the most fundamental principle in OOD, but it is mostly liked a summary of the previous five principles or a score to measure how well designed is the software.</p>
+<ol>
+<li>Single Responsibility Principle tells us to design classes with single responsibility.</li>
+<li>Liskov Substitution Principle tells us not to modify parent classes’ functions. Instead, try to extend them or use composition over inheritance.</li>
+<li>Dependency Inversion Principle brings us the concept of Interface-Oriented Programming.</li>
+<li>Interface Separation Principle favors multiple small interfaces over a single large interface.</li>
+<li>Dmitry’s Principle teaches us a software design principle: low coupling and high aggregation.</li>
+<li>Out of all, the Open Close Principle is a summary of those principles: favor extendability over modification.</li>
+</ol>
+<p>These are the six famous design principles of good software. With those design principles in mind, we can design more maintainable and scalable softwares.</p>
+<p>In the coming posts, I will discuss typical design patterns with examples in Java.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/08/java-synchronizers/" rel="next" title="Java Synchronizers">
+                <i class="fa fa-chevron-left"></i> Java Synchronizers
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/profile-image.jpeg" alt="Di Luo">
+            
+              <p class="site-author-name" itemprop="name">Di Luo</p>
+              <p class="site-description motion-element" itemprop="description">Software Ninjaneer</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/dibugger" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/profile.php?id=100009405004406" target="_blank" title="Facebook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>Facebook</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com/dibugger/" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.linkedin.com/in/dibugger" target="_blank" title="LinkedIn">
+                      
+                        <i class="fa fa-fw fa-linkedin"></i>LinkedIn</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Single-Responsibility-Principle-SRP"><span class="nav-number">1.</span> <span class="nav-text">Single Responsibility Principle (SRP)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Liskov-Substitution-Principle-LSP"><span class="nav-number">2.</span> <span class="nav-text">Liskov Substitution Principle (LSP)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dependency-Inversion-Principle-DIP"><span class="nav-number">3.</span> <span class="nav-text">Dependency Inversion Principle (DIP)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Interface-Segregation-Principle-ISP"><span class="nav-number">4.</span> <span class="nav-text">Interface Segregation Principle (ISP)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dmitry’s-Principle-Least-Knowledge-Principle"><span class="nav-number">5.</span> <span class="nav-text">Dmitry’s Principle (Least Knowledge Principle)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Open-Close-Principle"><span class="nav-number">6.</span> <span class="nav-text">Open Close Principle</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Di Luo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
