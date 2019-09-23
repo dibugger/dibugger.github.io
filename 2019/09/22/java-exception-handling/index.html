@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="A detailed explanation of exceptions in Java, including basic concept and best practices with examples.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java Exception Handling Best Practices">
+<meta property="og:url" content="http://dibugger.github.io/2019/09/22/java-exception-handling/index.html">
+<meta property="og:site_name" content="dibugger">
+<meta property="og:description" content="A detailed explanation of exceptions in Java, including basic concept and best practices with examples.">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://dibugger.github.io/images/post_images/java-exception-handling/exceptions.png">
+<meta property="og:updated_time" content="2019-09-23T06:51:22.593Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java Exception Handling Best Practices">
+<meta name="twitter:description" content="A detailed explanation of exceptions in Java, including basic concept and best practices with examples.">
+<meta name="twitter:image" content="http://dibugger.github.io/images/post_images/java-exception-handling/exceptions.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://dibugger.github.io/2019/09/22/java-exception-handling/">
+
+
+
+
+
+  <title>Java Exception Handling Best Practices | dibugger</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">dibugger</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2019/09/22/java-exception-handling/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Di Luo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/profile-image.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dibugger">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java Exception Handling Best Practices</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-22T23:51:15-07:00">
+                2019-09-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">A detailed explanation of exceptions in Java, including basic concept and best practices with examples.</blockquote>
+<a id="more"></a>
+
+<h1 id="Exceptions"><a href="#Exceptions" class="headerlink" title="Exceptions"></a>Exceptions</h1><p>In Java, the Throwable class is the superclass of all errors and exceptions. Only objects that are instances of Throwable or its subclasses are thrown by JVM or can be thrown by the Java throw statement.</p>
+<p>An error indicates serious problem that a reasonable application should not try to catch. Most such errors are abnormal conditions. For example, VirtualMachineError indicates a serious problem related to the Java Virtual Machine. A reasonable application should not try to handle this and is not capable to handle it.</p>
+<p>An exception indicates abnormal conditions that a reasonable application might want to catch. Exceptions are divided into Checked Exception and Unchecked Exception. Any subclasses of RuntimeException are unchecked exceptions.</p>
+<ul>
+<li>Checked Exceptions: They must be declared in the throws clause of a method, indicating that the caller should handle them. Alternatively, we can catch and handle them with try-catch block in the current method. Always handle the exceptions in the current method if you are sure how to deal with them.</li>
+<li>Unchecked Exceptions: JVM doesn’t force you to handle them as they are mostly generated at runtime due to programmatic errors. For example, NullPointerException, StackOverflowException and OutOfMemoryException, etc.</li>
+</ul>
+<p><img src="/images/post_images/java-exception-handling/exceptions.png"></p>
+<h1 id="Best-Practices"><a href="#Best-Practices" class="headerlink" title="Best Practices"></a>Best Practices</h1><h2 id="Use-exceptions-only-for-exceptional-conditions"><a href="#Use-exceptions-only-for-exceptional-conditions" class="headerlink" title="Use exceptions only for exceptional conditions"></a>Use exceptions only for exceptional conditions</h2><p>Exceptions are, as their name implies, to be used only for exceptional conditions; they should never by used for ordinary control flow. Even though there are known performance advantages by using exceptions for ordinary control flow, I still strongly discourage you to do so. First of all, the performance issue will be gradually improved with the platform implementation. Secondly, using exceptions in ordinary control flow brings subtle bugs and maintenance headaches, such as masking the other exceptions.</p>
+<p>A well-designed API must not force its clients to use exceptions for ordinary control flow. Here is a bad practice in Python’s list operation.</p>
+<p>Based on Python’s official documentation, the list.index(x[, start[, end]]) method returns zero-based index in the list of the first item whose value is equal to x. Raises a ValueError if there is no such item. The design of this method forces the user to include exceptions for ordinary control flow when an item is missing from the list.</p>
+<p>Java’s implementation of indexOf() method is more elegant and follows a better exception handling practice. Instead of raising an exception, Java will return a <strong>-1</strong> when the item is missing from the string. Since the list is zero-based, a <strong>-1</strong> is surely an abnormal return which can represents item not being found.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String s = <span class="string">"Hello World"</span>;</span><br><span class="line"><span class="keyword">int</span> idx = s.indexOf(<span class="string">"o"</span>);</span><br><span class="line"><span class="keyword">if</span> (idx == -<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="comment">// item not found</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// item found</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>To achieve this, two methods can be used when designing an API.</p>
+<ol>
+<li>First, we need to provide a state-testing method along with the state-dependent method. For example, there is always a hasNext() method with a next() method for each Java iterator. If the hasNext() method is not invoked before a next() method, the next() method might throw an exception if there is no more element to access.</li>
+<li>Second, we can have the state-dependent method to return an empty optional or a distinguished value such as a null if it cannot perform the desired computation.</li>
+</ol>
+<p>So how to choose between these two methods?</p>
+<ol>
+<li>If an object is to be accessed concurrently without external synchronization or is subject to externally induced state transitions, you must use an optional or distinguished return value. Performance concerns may dictate that an optional or distinguished return value.</li>
+<li>All other things being equal, a state-testing method offers better readability and makes the bug more obvious.</li>
+</ol>
+<h2 id="Use-checked-exceptions-for-recoverable-conditions-and-runtime-exceptions-for-programming-errors"><a href="#Use-checked-exceptions-for-recoverable-conditions-and-runtime-exceptions-for-programming-errors" class="headerlink" title="Use checked exceptions for recoverable conditions and runtime exceptions for programming errors"></a>Use checked exceptions for recoverable conditions and runtime exceptions for programming errors</h2><p>Use checked exceptions for conditions from which the caller can reasonably be expected to recover. The exception should provide methods that furnish information to help the caller recover from the exceptional condition.</p>
+<p>Use runtime exceptions to indicate programming errors. The great majority of runtime exceptions indicate precondition violations, such as ArrayIndexOutOfBoundsException.</p>
+<p>If you believe a condition is likely to allow for recovery, use a checked condition; if not, use a runtime exception. If it isn’t clear whether recovery is possible,you’re probably better off using an unchecked exception.</p>
+<p>Don’t define any throwables that are neither checked exceptions nor runtime exceptions (although Java doesn’t prohibit that).</p>
+<h2 id="Favor-the-use-of-standard-exceptions"><a href="#Favor-the-use-of-standard-exceptions" class="headerlink" title="Favor the use of standard exceptions"></a>Favor the use of standard exceptions</h2><p>Reuse of standard exceptions have many advantages:</p>
+<ol>
+<li>Easier to learn and use because it matches the established conventions that programmers are already familiar with.</li>
+<li>Fewer exception classes means a smaller memory footprint and less time spent loading classes.</li>
+<li>Exceptions are serializable. That alone is reason not to write your own exception class without good reason.</li>
+</ol>
+<p>This table summarizes the most commonly reused exceptions:</p>
+<table>
+<thead>
+<tr>
+<th>Exception</th>
+<th>Occasion for Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IllegalArgumentException</td>
+<td>Non-null parameter value is inappropriate</td>
+</tr>
+<tr>
+<td>IllegalStateException</td>
+<td>Object state is inappropriate for method invocation</td>
+</tr>
+<tr>
+<td>NullPointerException</td>
+<td>Parameter value is null when prohibited</td>
+</tr>
+<tr>
+<td>IndexOutOfBoundsException</td>
+<td>Index parameter value is out of range</td>
+</tr>
+<tr>
+<td>ConcurrentModificationException</td>
+<td>Concurrent Modification of an object has been detected where it is prohibited</td>
+</tr>
+<tr>
+<td>UnsupportedOperationException</td>
+<td>Object does not support method</td>
+</tr>
+</tbody></table>
+<p>Sometimes it is vague to choose which exception to reuse because the “occasions for use” in the table above do not appear to be mutually exclusive. The rule is to throw IllegalStateException if no argument values would have worked, otherwise throw IllegalArgumentException.</p>
+<h2 id="Throw-exceptions-appropriate-to-the-abstraction"><a href="#Throw-exceptions-appropriate-to-the-abstraction" class="headerlink" title="Throw exceptions appropriate to the abstraction"></a>Throw exceptions appropriate to the abstraction</h2><p>Exception translation: Higher layers should catch lower-level exceptions and, in their place, throw exceptions that can be explained in terms of the higher-level abstraction.</p>
+<p>It is prohibited to propagates the an exception thrown by a lower-level abstraction directly to users without providing meaningful explanation related to the current method. And always throw only relevant information from a method. </p>
+<p>A special form of exception translation called exception chaining is called for in cases where the lower-level exception might be useful to someone debugging the problem that caused the higher-level exception.</p>
+<p>One way to achieve this is provide the lower-level exception to higher-level exception’s constructor.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    ... <span class="comment">// User lower-level abstraction to do our bidding</span></span><br><span class="line">&#125; <span class="keyword">catch</span> (LowerLevelException cause) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> HigherLevelException(cause);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HigherLevelException</span> <span class="keyword">extends</span> <span class="title">Exception</span> </span>&#123;</span><br><span class="line">    HigherLevelException(Throwable cause) &#123;</span><br><span class="line">        <span class="keyword">super</span>(cause);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Another way is to wrap to lower-level exception and throw a new exception. But always correctly wrap the exceptions in custom exceptions so that stack trace is not lost.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">catch</span> (NoSuchMethodException e) &#123;</span><br><span class="line">   <span class="keyword">throw</span> <span class="keyword">new</span> MyServiceException(<span class="string">"Some information: "</span> + e.getMessage());  <span class="comment">//Incorrect way</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The below code destroys the stack trace of the original exception, which makes it difficult to find the root cause. Instead, we need to include the full stack trace of lower-level exception.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">catch</span> (NoSuchMethodException e) &#123;</span><br><span class="line">   <span class="keyword">throw</span> <span class="keyword">new</span> MyServiceException(<span class="string">"Some information: "</span> , e);  <span class="comment">//Correct way</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In summary, if you cannot prevent or handle exceptions from lower-level layers, use exception translation. Exception chaining allows you to throw an appropriate higher-level exceptions while capturing the underlying cause for failure analysis.</p>
+<h2 id="Document-all-exceptions-thrown-by-each-method"><a href="#Document-all-exceptions-thrown-by-each-method" class="headerlink" title="Document all exceptions thrown by each method"></a>Document all exceptions thrown by each method</h2><p>Always declare checked exceptions individually, and document precisely the conditions under which each one is thrown using the Javadoc @throws tag.</p>
+<p>Use the Javadoc @throws tag to document each exception that a method can throw, but do not use the throws keyword on unchecked exceptions.</p>
+<p>If an exception is thrown by many methods in a class for the same reason, you can document the exception in the class’s documentation comment rather than documenting it individually for each method.</p>
+<h2 id="Strive-for-failure-atomicity"><a href="#Strive-for-failure-atomicity" class="headerlink" title="Strive for failure atomicity"></a>Strive for failure atomicity</h2><p>Generally speaking, a failed method invocation should leave the object in the state that it was in prior to the invocation.</p>
+<ol>
+<li>Design immutable objects.</li>
+<li>For mutable objects, check parameters for validity before performing the operation.</li>
+<li>Order the computation so that any part that may fail takes place before any part that modifies the object.</li>
+<li>Perform the operation on a temporary copy of the object and to replace the contents of the object with the temporary copy once the operation is complete.</li>
+<li>Write recovery code that intercepts a failure that occurs in the midst of an operation, and causes the object to roll back its state to the point before the operation began.</li>
+</ol>
+<p>Where this rule is violated, the API documentation should clearly indicate what state the object will be left in.</p>
+<h3 id="Be-as-specific-as-possible"><a href="#Be-as-specific-as-possible" class="headerlink" title="Be as specific as possible"></a>Be as specific as possible</h3><ol>
+<li>Declare the specific checked exceptions that your method can throw</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;&#125; <span class="comment">// Incorrect, too broad exception</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> <span class="keyword">throws</span> SpecificException1, SpecificException2 </span>&#123;&#125; <span class="comment">// Correct, specific exceptions</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>Do not catch the Exception class rather than specific sub classes</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    someMethod();</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    exceptionHandler(e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Instead, try to catch specific exceptions:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    someMethod();</span><br><span class="line">&#125; <span class="keyword">catch</span> (SpecificException1 e) &#123;</span><br><span class="line">    exceptionHandler1(e);</span><br><span class="line">&#125; <span class="keyword">catch</span> (SpecificException2 e) &#123;</span><br><span class="line">    exceptionHandler2(e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Other-practices"><a href="#Other-practices" class="headerlink" title="Other practices"></a>Other practices</h2><ul>
+<li><p>Never throw any exception from finally block. If the code you call in a finally block can possibly throw an exception, make sure that you either handle it, or log it. Never let it come out of the finally block.</p>
+</li>
+<li><p>Don’t use printStackTrace() statement or similar methods. Chances are your fellow colleagues will got one of those stack traces eventually and have exactly zero knowledge as to what to do with it because it will not have any contextual information appended to it.</p>
+</li>
+<li><p>Use finally blocks instead of catch blocks if you are not going to handle the exception. Always clean up after handling the exception.</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    someMethod();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    cleanup(); <span class="comment">// when exception occurs, you don't want to handle it but need to do some cleanup work</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>Throw Early, Catch Late. You will be more likely to throw an exception in the lower-level methods, where you will be checking for if single values are null or inappropriate. And you will be making the exception climb the stack trace for quite several levels until you reach a sufficient level of abstraction to be able to handle the problem.</p>
+</li>
+<li><p>Always include all information about an exception in single log messages, so that log messages from a single exception won’t mess up when there are multiple threads running in parallel.</p>
+</li>
+<li><p>Always terminate the thread which is interrupted.</p>
+</li>
+</ul>
+<p>InterruptedException is a clue to your code that it should stop whatever it is doing.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Thread.sleep(<span class="number">1000000</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">        doSomethingCool();  <span class="comment">// Incorrect!</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Instead, we need to jump out of the while loop if the InterruptedException comes.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Thread.sleep(<span class="number">100000</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">doSomethingCool();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Use template methods for repeated try-catch. Similar catch block increases code duplicity which does not help anything. </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class DBUtil&#123;</span><br><span class="line">    public static void closeConnection(Connection conn)&#123;</span><br><span class="line">        try&#123;</span><br><span class="line">            conn.close();</span><br><span class="line">        &#125; catch(Exception ex)&#123;</span><br><span class="line">            //Log Exception - Cannot close connection</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>This part of code can be reused in thousands of places in your application. Don’t put the whole code in every place rather define above method and use it everything like below:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dataAccessCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Connection conn = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        conn = getConnection();</span><br><span class="line">        ....</span><br><span class="line">    &#125; <span class="keyword">finally</span>&#123;</span><br><span class="line">        DBUtil.closeConnection(conn);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>References:</p>
+<ol>
+<li>Effective Java Third Edition</li>
+<li><a href="https://howtodoinjava.com/best-practices/java-exception-handling-best-practices/" target="_blank" rel="noopener">https://howtodoinjava.com/best-practices/java-exception-handling-best-practices/</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/22/design-principles/" rel="next" title="Design Principles">
+                <i class="fa fa-chevron-left"></i> Design Principles
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/profile-image.jpeg" alt="Di Luo">
+            
+              <p class="site-author-name" itemprop="name">Di Luo</p>
+              <p class="site-description motion-element" itemprop="description">Software Ninjaneer</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/dibugger" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/profile.php?id=100009405004406" target="_blank" title="Facebook">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>Facebook</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com/dibugger/" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.linkedin.com/in/dibugger" target="_blank" title="LinkedIn">
+                      
+                        <i class="fa fa-fw fa-linkedin"></i>LinkedIn</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Exceptions"><span class="nav-number">1.</span> <span class="nav-text">Exceptions</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Best-Practices"><span class="nav-number">2.</span> <span class="nav-text">Best Practices</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-exceptions-only-for-exceptional-conditions"><span class="nav-number">2.1.</span> <span class="nav-text">Use exceptions only for exceptional conditions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-checked-exceptions-for-recoverable-conditions-and-runtime-exceptions-for-programming-errors"><span class="nav-number">2.2.</span> <span class="nav-text">Use checked exceptions for recoverable conditions and runtime exceptions for programming errors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Favor-the-use-of-standard-exceptions"><span class="nav-number">2.3.</span> <span class="nav-text">Favor the use of standard exceptions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Throw-exceptions-appropriate-to-the-abstraction"><span class="nav-number">2.4.</span> <span class="nav-text">Throw exceptions appropriate to the abstraction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Document-all-exceptions-thrown-by-each-method"><span class="nav-number">2.5.</span> <span class="nav-text">Document all exceptions thrown by each method</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Strive-for-failure-atomicity"><span class="nav-number">2.6.</span> <span class="nav-text">Strive for failure atomicity</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Be-as-specific-as-possible"><span class="nav-number">2.6.1.</span> <span class="nav-text">Be as specific as possible</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Other-practices"><span class="nav-number">2.7.</span> <span class="nav-text">Other practices</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Di Luo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
