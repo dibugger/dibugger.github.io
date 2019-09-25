@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="This post is a summary of The Google&apos;s Engineering Practices documentation about how to do a code review.">
+<meta name="description" content="This post is a summary of The Google&apos;s Engineering Practices documentation about how to write a good CL.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="How to Do a Code Review">
-<meta property="og:url" content="http://dibugger.github.io/2019/09/25/how-to-do-a-code-review/index.html">
+<meta property="og:title" content="How to Write a good CL">
+<meta property="og:url" content="http://dibugger.github.io/2019/09/25/how-to-write-a-cl/index.html">
 <meta property="og:site_name" content="dibugger">
-<meta property="og:description" content="This post is a summary of The Google&apos;s Engineering Practices documentation about how to do a code review.">
+<meta property="og:description" content="This post is a summary of The Google&apos;s Engineering Practices documentation about how to write a good CL.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-25T22:54:30.079Z">
+<meta property="og:updated_time" content="2019-09-25T22:54:18.980Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="How to Do a Code Review">
-<meta name="twitter:description" content="This post is a summary of The Google&apos;s Engineering Practices documentation about how to do a code review.">
+<meta name="twitter:title" content="How to Write a good CL">
+<meta name="twitter:description" content="This post is a summary of The Google&apos;s Engineering Practices documentation about how to write a good CL.">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://dibugger.github.io/2019/09/25/how-to-do-a-code-review/">
+  <link rel="canonical" href="http://dibugger.github.io/2019/09/25/how-to-write-a-cl/">
 
 
 
 
 
-  <title>How to Do a Code Review | dibugger</title>
+  <title>How to Write a good CL | dibugger</title>
   
 <script>
   window.fbAsyncInit = function() {
@@ -270,7 +270,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2019/09/25/how-to-do-a-code-review/">
+    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2019/09/25/how-to-write-a-cl/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Di Luo">
@@ -287,7 +287,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">How to Do a Code Review</h2>
+          <h2 class="post-title" itemprop="name headline">How to Write a good CL</h2>
         
 
         <div class="post-meta">
@@ -299,7 +299,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T11:23:39-07:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T15:54:18-07:00">
                 2019-09-25
               </time>
             
@@ -351,8 +351,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/09/25/how-to-do-a-code-review/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count fb-comments-count" data-href="http://dibugger.github.io/2019/09/25/how-to-do-a-code-review/" itemprop="commentCount">0</span> comments
+                <a href="/2019/09/25/how-to-write-a-cl/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count fb-comments-count" data-href="http://dibugger.github.io/2019/09/25/how-to-write-a-cl/" itemprop="commentCount">0</span> comments
                 </a>
               </span>
             
@@ -360,7 +360,7 @@
 
           
           
-             <span id="/2019/09/25/how-to-do-a-code-review/" class="leancloud_visitors" data-flag-title="How to Do a Code Review">
+             <span id="/2019/09/25/how-to-write-a-cl/" class="leancloud_visitors" data-flag-title="How to Write a good CL">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -391,57 +391,73 @@
       
 
       
-        <blockquote class="blockquote-center">This post is a summary of The <a href="https://google.github.io/eng-practices/review/reviewer/" target="_blank" rel="noopener">Google's Engineering Practices documentation</a> about how to do a code review.</blockquote>
+        <blockquote class="blockquote-center">This post is a summary of The <a href="https://google.github.io/eng-practices/review/developer/" target="_blank" rel="noopener">Google's Engineering Practices documentation</a> about how to write a good CL.</blockquote>
 <a id="more"></a>
 
-<p>A couple terms in this post:</p>
+<h2 id="Writing-good-CL-description"><a href="#Writing-good-CL-description" class="headerlink" title="Writing good CL description"></a>Writing good CL description</h2><p>A CL description is a public record of <strong>what</strong> change is being made and <strong>why</strong> it was made. A lot of developers do very well in writing what the CL does but tend to ignore <strong>why</strong> it was made.</p>
+<h3 id="First-Line"><a href="#First-Line" class="headerlink" title="First Line"></a>First Line</h3><ul>
+<li>Short summary of what is being done.</li>
+<li>Complete sentence, written as it was an order.</li>
+<li>Follow by empty line.</li>
+</ul>
+<p>The first line should be a short summary of <strong>what</strong> is being made. It should be informative enough so that future developers don’t have to read your CL or its whole description just to get a general idea of what your CL actually did.</p>
+<p>Use an imperative sentence as if you are making an order. For example:</p>
 <ul>
-<li>CR: Code Review</li>
-<li>CL: Change List</li>
+<li><strong>Delete</strong> the FizzBuzz RPC and <strong>replace</strong> it with the new system.</li>
 </ul>
-<h2 id="The-Standard-of-Code-Review"><a href="#The-Standard-of-Code-Review" class="headerlink" title="The Standard of Code Review"></a>The Standard of Code Review</h2><p>The primary purpose of code review is to make sure that the overall code health of code base is improving over time.</p>
-<blockquote>
-<p>In general, reviewers should favor approving a CL once it is in a state where it definitely improves the overall code health of the system being worked on, even if the CL isn’t perfect.</p>
-</blockquote>
-<p>There are limitations to this. For example, if a CL adds a feature that the reviewer doesn’t want in their system, then the reviewer can certainly deny approval even if the code is well-designed.</p>
-<p>A key point is there is no such thing as “perfect” code - there is only better code. Instead of seeking perfection, what a reviewer should seek is continuous improvement.</p>
-<p>For those unimportant or purely educational comments, prefix it with something like <strong>“Nit: “</strong> to indicate that it’s not mandatory for the author to resolve it in this CL.</p>
-<blockquote>
-<p>Technical facts and data overrule opinions and personal preferences. Aspects of software design are almost never a pure style issue or just a personal preferences.</p>
-</blockquote>
-<p>The <a href="https://google.github.io/styleguide/" target="_blank" rel="noopener">Google Style Guide</a> is the absolute authority when it comes to the matters of style. The style should be consistent with what is there. If there is no previous style, accept the author’s.</p>
-<blockquote>
-<p>Try to resolve the conflicts by all means but don’t let a CL sit around because the author and the reviewer can’t come to an agreement.</p>
-</blockquote>
-<h2 id="What-to-look-for-in-a-code-review"><a href="#What-to-look-for-in-a-code-review" class="headerlink" title="What to look for in a code review"></a>What to look for in a code review</h2><h3 id="Design"><a href="#Design" class="headerlink" title="Design"></a>Design</h3><p>The code is well-designed.</p>
-<h3 id="Functionality"><a href="#Functionality" class="headerlink" title="Functionality"></a>Functionality</h3><p>The functionality is good for the users of the code. Users can be the end users (when they are affected by the change) and developers (who will have to use this code in the future).</p>
-<p>Any UI change should be sensible and look good. It is hard to understand how some changes will impact a user by just reading the code. In this case, ask the developer to give you a demo or try it yourself.</p>
-<p>Be very cautious about any <strong>parallel programming</strong> which might cause race conditions and deadlocks. This is very hard to detect by just running the code. Avoid using concurrency models unless they are necessary.</p>
-<h3 id="Complexity"><a href="#Complexity" class="headerlink" title="Complexity"></a>Complexity</h3><p>Be vigilant about <strong>over-engineering</strong>. Encourage developers to solve the problem they know needs to be solved <strong>now</strong>, not the problem that the developer speculates might need to solved in the future. Unless you are an software architect or you are designing a  framework which guides the design of software, try not to do over-engineering.</p>
-<h3 id="Tests"><a href="#Tests" class="headerlink" title="Tests"></a>Tests</h3><p>Code has appropriate unit tests, which should be well-designed.</p>
-<h3 id="Comments"><a href="#Comments" class="headerlink" title="Comments"></a>Comments</h3><p>Comments are useful when they <strong>explain why</strong> some code exists and should not be explaining what some code is doing. Try to reduce the code complexity when code isn’t clear enough to explain itself. Note that comments are different from documentation of classes, modules, or functions, which should instead express the purpose of a piece of code, how it should be used, and how it behaves when used.</p>
-<h3 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h3><ul>
-<li>The developer used clear names for everything.</li>
-<li>Code is appropriately documented.</li>
-<li>The code conforms to our style guide.</li>
+<p>Instead of:</p>
+<ul>
+<li><strong>Deleting/Deleted</strong> the FizzBuzz RPC and <strong>replacing/replaced</strong> it with the new system.</li>
 </ul>
-<h2 id="Navigate-a-CL-in-review"><a href="#Navigate-a-CL-in-review" class="headerlink" title="Navigate a CL in review"></a>Navigate a CL in review</h2><h3 id="Step-One-Take-a-broader-view-of-the-change"><a href="#Step-One-Take-a-broader-view-of-the-change" class="headerlink" title="Step One: Take a broader view of the change"></a>Step One: Take a broader view of the change</h3><p>Look at the CL description and what the CL does in general. If a CL shouldn’t have happened in the first place, please respond immediately with an explanation why the change not be happening and suggest the developer what they should have done. A good example is:</p>
-<p>“Looks like you put some good work into this, thanks! (Be polite and recognize other’s work) However, we are actually going in the direction of removing the FooWidget system that you’re modifying here. We don’t want to make any change to it right now. (Explain why the change not be happening” How about instead you refactor our new BarWidget system? (Suggest the developer what they should have done)”</p>
-<h3 id="Step-Two-Examine-the-main-parts-of-the-CL"><a href="#Step-Two-Examine-the-main-parts-of-the-CL" class="headerlink" title="Step Two: Examine the main parts of the CL"></a>Step Two: Examine the main parts of the CL</h3><p>Look into the main parts of this CL first. If you see some major design problems with this part of the CL, send those comments immediately and most likely the rest of the CL doesn’t worth reviewing.</p>
-<h3 id="Step-Three-Look-through-the-rest-of-the-CL-in-an-appropriate-sequence"><a href="#Step-Three-Look-through-the-rest-of-the-CL-in-an-appropriate-sequence" class="headerlink" title="Step Three: Look through the rest of the CL in an appropriate sequence"></a>Step Three: Look through the rest of the CL in an appropriate sequence</h3><p>Once you’ve confirmed there are no major design problems with the CL as a whole, try to figure out a logical sequence to look through the files while also making sure you don’t miss reviewing any file.</p>
-<h2 id="Speed-of-Code-Reviews"><a href="#Speed-of-Code-Reviews" class="headerlink" title="Speed of Code Reviews"></a>Speed of Code Reviews</h2><p>Code reviews should be fast! You should do a code review shortly after it comes in if you are not in the middle of a focused task. One business day is the maximum time it should take to respond to a code review request.</p>
-<p>If somebody sends you a code review that is so large you’re not sure when you will be able to have time to review it, ask the developer to split the CL into several smaller CLs that build on each other, instead of one huge CL that has to be reviewed all at once. If the CL is not able to be broken down, try to provide some comments on the overall design of the CL. The goal as a reviewer should be to always unblock the developer or enable them to take some sort of further action quickly.</p>
-<h2 id="How-to-write-code-review-comments"><a href="#How-to-write-code-review-comments" class="headerlink" title="How to write code review comments"></a>How to write code review comments</h2><h3 id="Be-kind"><a href="#Be-kind" class="headerlink" title="Be kind"></a>Be kind</h3><p>Always make comments about the code but never about the developers. For example:</p>
-<p>Bad: “Why did you use threads here when there’s obviously no benefit to be gained from concurrency?”</p>
-<p>Good: “The concurrency model here is adding complexity to the system without any actual performance benefit that I can see. Because there’s no performance benefit, it’s best for this code to be single-threaded instead of using multiple threads.”</p>
-<h3 id="Explain-your-reasoning"><a href="#Explain-your-reasoning" class="headerlink" title="Explain your reasoning"></a>Explain your reasoning</h3><p>The good example above actually explains why you are making your comments instead of pointing out what is wrong. Always include explanation around your intent, the best practice you’re following and how you suggestion improves the code health.</p>
-<h3 id="Give-Guidance"><a href="#Give-Guidance" class="headerlink" title="Give Guidance"></a>Give Guidance</h3><p>Strike an appropriate balance between pointing out problems and providing direct guidance. Pointing out the problems and letting the developer make a decision often helps the developer learn and makes it easier to do code review. However, sometimes direct suggestions, instructions or even code are more helpful.</p>
-<p>The developers should write explanations in the code rather than only the code review code, which makes it easier for the users who might use the code in the future.</p>
-<h3 id="Handle-pushbacks"><a href="#Handle-pushbacks" class="headerlink" title="Handle pushbacks"></a>Handle pushbacks</h3><p>When the developers are right - mostly because they are closer to the code and have a better understanding of certain aspects of it - the reviewers should let the developers know that they are right and let the issue drop.</p>
-<p>When the reviewers still believe they are right. Please write an explanation which demonstrates an understanding of the developer’s reply and additional information about why the change is being requested.</p>
-<p>It is usually best to insist that the developer clean up their CL now, before the code is in the codebase and “done”. Most likely the developers forgot about the followup CLs which they promise to have some cleanup of the current CL. Letting people “clean things up later” is a common way for codebases to degenerate.</p>
-<p>If it is an emergency, it is better to have the developers file a bug for cleanup and assign to themselves so that the cleanup won’t get lost. And include a TODO comment in the code which references the filed bug.</p>
-<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>In general, the goal of a code review is to improve the codebase over time. As a reviewer, you should stick to the high standard of the code review and keep in mind what to look for in a CL. When writing the comments, try to be polite as much as possible and give explanations of your intend and suggestions to the developers. Resolve the conflicts in a polite manner as soon as possible. </p>
+<p>However, you don’t have to use imperative sentences in the rest of the description.</p>
+<h3 id="Body"><a href="#Body" class="headerlink" title="Body"></a>Body</h3><p>The body of a CL should be informative, including a brief description of the problem that’s being solved, and why it is the best approach. If there are any shortcomings to the approach, they should be mentioned. If relevant, include background information such as bug numbers, benchmark results, and links to design documents.</p>
+<p>Even small CLs deserve a little attention to detail. Put the CL in context.</p>
+<h3 id="Bad-CL-Descriptions"><a href="#Bad-CL-Descriptions" class="headerlink" title="Bad CL Descriptions"></a>Bad CL Descriptions</h3><ul>
+<li>“Fix build.”</li>
+<li>“Add patch.”</li>
+<li>“Moving code from A to B.”</li>
+<li>“Phase 1.”</li>
+<li>“Add convenience functions.”</li>
+<li>“kill weird URLs.”</li>
+</ul>
+<p>Follow the above instructions on how to write a good description. Keep in mind that the description is to help future users (and possibly the future <strong>YOU</strong>) to know what was happening by just looking into the it.</p>
+<h3 id="Good-CL-Descriptions"><a href="#Good-CL-Descriptions" class="headerlink" title="Good CL Descriptions"></a>Good CL Descriptions</h3><p>Here are some examples of good descriptions.</p>
+<p><strong>Functionality change</strong></p>
+<blockquote><p>rpc: remove size limit on RPC server message freelist.</p>
+<p>Servers like FizzBuzz have very large messages and would benefit from reuse. Make the freelist larger, and add a goroutine that frees the freelist entries slowly over time, so that idle servers eventually release all freelist entries.</p>
+</blockquote>
+
+<p>The first few words describe what the CL actually does. The rest of the description talks about the problem being solved, why this is a good solution, and a bit more information about the specific implementation.</p>
+<p><strong>Refactoring</strong></p>
+<blockquote><p>Construct a Task with a TimeKeeper to use its TimeStr and Now methods.</p>
+<p>Add a Now method to Task, so the borglet() getter method can be removed (which was only used by OOMCandidate to call borglet’s Now method). This replaces the methods on Borglet that delegate to a TimeKeeper.</p>
+<p>Allowing Tasks to supply Now is a step toward eliminating the dependency on Borglet. Eventually, collaborators that depend on getting Now from the Task should be changed to use a TimeKeeper directly, but this has been an accommodation to refactoring in small steps.</p>
+<p>Continuing the long-range goal of refactoring the Borglet Hierarchy.</p>
+</blockquote>
+
+<p>The first line describes what the CL does and how this is a change from the past. The rest of the description talks about the specific implementation, the context of the CL, that the solution isn’t ideal, and possible future direction. It also explains why this change is being made.</p>
+<p><strong>Small CL that needs some context</strong></p>
+<blockquote><p>Create a Python3 build rule for status.py.</p>
+<p>This allows consumers who are already using this as in Python3 to depend on a rule that is next to the original status build rule instead of somewhere in their own tree. It encourages new consumers to use Python3 if they can, instead of Python2, and significantly simplifies some automated build file refactoring tools being worked on currently.</p>
+</blockquote>
+
+<p>The first sentence describes what’s actually being done. The rest of the description explains why the change is being made and gives the reviewer a lot of context.</p>
+<h2 id="Small-CLs"><a href="#Small-CLs" class="headerlink" title="Small CLs"></a>Small CLs</h2><p>Reviewers have discretion to reject your change outright for the sole reason of it being too large.</p>
+<p>The right size of a CL is one self-contained change. It makes a minimal change that addresses <strong>just one thing</strong>. This is usually just one part of a feature, rather than a whole feature at once. The CL should contains everything that the reviewers needs to understand.</p>
+<p>There is no hard and fast rules about how large is “too large”. 100 lines is usually a reasonable size for a CL, and 1000 lines is usually too large. The number of files that a change is spread across also affect its “size”. A 200-line change in one file might be okay, but spread across 50 files it would usually be too large.</p>
+<p>Unlike the developers who have been intimately involved with their code, the reviewers often don’t have much context. Try to write CLs that are smaller than you think you need to write. Reviewers won’t complain about getting CLs that are too small.</p>
+<p>It is best to do refactorings in a separate CL from feature changes or bug fixes. But small changes like renaming variables can still go into the same CL.</p>
+<p>Keep related test code in the same CL. But independent test modifications can go into separate CLs first. That includes:</p>
+<ul>
+<li>validating pre-existing, submitted code with new tests</li>
+<li>refactoring the test code (eg. introduce helper functions)</li>
+<li>introducing larger test framework code (eg. an integration test)</li>
+</ul>
+<p>Evert CL should not break the build for even one minute. Try to come up a way to make sure the whole system keeps working after the CL is submitted if you have multiple CLs that depend on each other.</p>
+<p>If a large CL is necessary (which is extremely rare), talk to your reviewers first to let them know what is coming. And expect a longer code review process.</p>
+<h2 id="Handle-reviewer-comments"><a href="#Handle-reviewer-comments" class="headerlink" title="Handle reviewer comments"></a>Handle reviewer comments</h2><p>Don’t take it personally. Never respond in anger to code review comments.</p>
+<p>If a reviewer says that they don’t understand something in your code, clarify the code itself first and add necessary comments in the code. Only when a comment seems pointless should you response an explanation in the code review tool. Remember that the comments in the code will help the future users more than those in the code review tool.</p>
+<p>No matter how certain you are when you receive a feedback in the CR, step back and consider if the reviewer is providing valuable feedback that will help the codebase and the company. If you can’t answer that question, try to reach out to the reviewers and have them clarify their comments.</p>
 
       
     </div>
@@ -466,8 +482,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/09/22/java-exception-handling/" rel="next" title="Java Exception Handling Best Practices">
-                <i class="fa fa-chevron-left"></i> Java Exception Handling Best Practices
+              <a href="/2019/09/25/how-to-do-a-code-review/" rel="next" title="How to Do a Code Review">
+                <i class="fa fa-chevron-left"></i> How to Do a Code Review
               </a>
             
           </div>
@@ -475,10 +491,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/25/how-to-write-a-cl/" rel="prev" title="How to Write a good CL">
-                How to Write a good CL <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -509,7 +521,7 @@
 
   
     <div class="comments" id="comments">
-      <div class="fb-comments" data-href="http://dibugger.github.io/2019/09/25/how-to-do-a-code-review/" data-numposts="10" data-width="100%" data-colorscheme="light">
+      <div class="fb-comments" data-href="http://dibugger.github.io/2019/09/25/how-to-write-a-cl/" data-numposts="10" data-width="100%" data-colorscheme="light">
       </div>
     </div>
 
@@ -637,7 +649,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Standard-of-Code-Review"><span class="nav-number">1.</span> <span class="nav-text">The Standard of Code Review</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-to-look-for-in-a-code-review"><span class="nav-number">2.</span> <span class="nav-text">What to look for in a code review</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Design"><span class="nav-number">2.1.</span> <span class="nav-text">Design</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Functionality"><span class="nav-number">2.2.</span> <span class="nav-text">Functionality</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Complexity"><span class="nav-number">2.3.</span> <span class="nav-text">Complexity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tests"><span class="nav-number">2.4.</span> <span class="nav-text">Tests</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Comments"><span class="nav-number">2.5.</span> <span class="nav-text">Comments</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Others"><span class="nav-number">2.6.</span> <span class="nav-text">Others</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Navigate-a-CL-in-review"><span class="nav-number">3.</span> <span class="nav-text">Navigate a CL in review</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-One-Take-a-broader-view-of-the-change"><span class="nav-number">3.1.</span> <span class="nav-text">Step One: Take a broader view of the change</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-Two-Examine-the-main-parts-of-the-CL"><span class="nav-number">3.2.</span> <span class="nav-text">Step Two: Examine the main parts of the CL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-Three-Look-through-the-rest-of-the-CL-in-an-appropriate-sequence"><span class="nav-number">3.3.</span> <span class="nav-text">Step Three: Look through the rest of the CL in an appropriate sequence</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Speed-of-Code-Reviews"><span class="nav-number">4.</span> <span class="nav-text">Speed of Code Reviews</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-write-code-review-comments"><span class="nav-number">5.</span> <span class="nav-text">How to write code review comments</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Be-kind"><span class="nav-number">5.1.</span> <span class="nav-text">Be kind</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Explain-your-reasoning"><span class="nav-number">5.2.</span> <span class="nav-text">Explain your reasoning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Give-Guidance"><span class="nav-number">5.3.</span> <span class="nav-text">Give Guidance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Handle-pushbacks"><span class="nav-number">5.4.</span> <span class="nav-text">Handle pushbacks</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">6.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Writing-good-CL-description"><span class="nav-number">1.</span> <span class="nav-text">Writing good CL description</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#First-Line"><span class="nav-number">1.1.</span> <span class="nav-text">First Line</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Body"><span class="nav-number">1.2.</span> <span class="nav-text">Body</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bad-CL-Descriptions"><span class="nav-number">1.3.</span> <span class="nav-text">Bad CL Descriptions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Good-CL-Descriptions"><span class="nav-number">1.4.</span> <span class="nav-text">Good CL Descriptions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Small-CLs"><span class="nav-number">2.</span> <span class="nav-text">Small CLs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Handle-reviewer-comments"><span class="nav-number">3.</span> <span class="nav-text">Handle reviewer comments</span></a></li></ol></div>
             
 
           </div>
