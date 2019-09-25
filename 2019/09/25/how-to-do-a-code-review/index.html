@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Concept, proof and implementation of Reservoir Sampling and Fisher Yates shuffle.">
+<meta name="description" content="This post is a summary of The Google&apos;s Engineering Practices documentation about how to do a code review.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Reservoir Sampling">
-<meta property="og:url" content="http://dibugger.github.io/2017/01/03/reservoir-sampling/index.html">
+<meta property="og:title" content="How to Do a Code Review">
+<meta property="og:url" content="http://dibugger.github.io/2019/09/25/how-to-do-a-code-review/index.html">
 <meta property="og:site_name" content="dibugger">
-<meta property="og:description" content="Concept, proof and implementation of Reservoir Sampling and Fisher Yates shuffle.">
+<meta property="og:description" content="This post is a summary of The Google&apos;s Engineering Practices documentation about how to do a code review.">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-09-17T05:10:38.225Z">
+<meta property="og:updated_time" content="2019-09-25T18:23:39.567Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Reservoir Sampling">
-<meta name="twitter:description" content="Concept, proof and implementation of Reservoir Sampling and Fisher Yates shuffle.">
+<meta name="twitter:title" content="How to Do a Code Review">
+<meta name="twitter:description" content="This post is a summary of The Google&apos;s Engineering Practices documentation about how to do a code review.">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://dibugger.github.io/2017/01/03/reservoir-sampling/">
+  <link rel="canonical" href="http://dibugger.github.io/2019/09/25/how-to-do-a-code-review/">
 
 
 
 
 
-  <title>Reservoir Sampling | dibugger</title>
+  <title>How to Do a Code Review | dibugger</title>
   
 <script>
   window.fbAsyncInit = function() {
@@ -270,7 +270,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2017/01/03/reservoir-sampling/">
+    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2019/09/25/how-to-do-a-code-review/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Di Luo">
@@ -287,7 +287,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">Reservoir Sampling</h2>
+          <h2 class="post-title" itemprop="name headline">How to Do a Code Review</h2>
         
 
         <div class="post-meta">
@@ -299,8 +299,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-03T10:27:49-08:00">
-                2017-01-03
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-25T11:23:39-07:00">
+                2019-09-25
               </time>
             
 
@@ -322,8 +322,19 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Algorithm/" itemprop="url" rel="index">
-                    <span itemprop="name">Algorithm</span>
+                  <a href="/categories/engineering/" itemprop="url" rel="index">
+                    <span itemprop="name">engineering</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/engineering/code-review/" itemprop="url" rel="index">
+                    <span itemprop="name">code review</span>
                   </a>
                 </span>
 
@@ -340,8 +351,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/01/03/reservoir-sampling/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count fb-comments-count" data-href="http://dibugger.github.io/2017/01/03/reservoir-sampling/" itemprop="commentCount">0</span> comments
+                <a href="/2019/09/25/how-to-do-a-code-review/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count fb-comments-count" data-href="http://dibugger.github.io/2019/09/25/how-to-do-a-code-review/" itemprop="commentCount">0</span> comments
                 </a>
               </span>
             
@@ -349,7 +360,7 @@
 
           
           
-             <span id="/2017/01/03/reservoir-sampling/" class="leancloud_visitors" data-flag-title="Reservoir Sampling">
+             <span id="/2019/09/25/how-to-do-a-code-review/" class="leancloud_visitors" data-flag-title="How to Do a Code Review">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -380,49 +391,57 @@
       
 
       
-        <blockquote class="blockquote-center">Concept, proof and implementation of Reservoir Sampling and Fisher Yates shuffle.</blockquote>
+        <blockquote class="blockquote-center">This post is a summary of The <a href="https://google.github.io/eng-practices/review/reviewer/" target="_blank" rel="noopener">Google's Engineering Practices documentation</a> about how to do a code review.</blockquote>
 <a id="more"></a>
 
-<h1 id="Concept"><a href="#Concept" class="headerlink" title="Concept"></a>Concept</h1><p>The concept of reservoir sampling comes from a question:</p>
+<p>A couple terms in this post:</p>
+<ul>
+<li>CR: Code Review</li>
+<li>CL: Change List</li>
+</ul>
+<h2 id="The-Standard-of-Code-Review"><a href="#The-Standard-of-Code-Review" class="headerlink" title="The Standard of Code Review"></a>The Standard of Code Review</h2><p>The primary purpose of code review is to make sure that the overall code health of code base is improving over time.</p>
 <blockquote>
-<p>How could you select one of n objects at random, where you see the objects sequentially but you do not know the value of n before. For example, how would you read a text file and select and print one random line, when you don’t know the number of lines in advance?</p>
+<p>In general, reviewers should favor approving a CL once it is in a state where it definitely improves the overall code health of the system being worked on, even if the CL isn’t perfect.</p>
 </blockquote>
-<p>The problems that reservoir sampling solves are what ask you to select a random object the number of the objects is not given.</p>
-<h1 id="Algorithm"><a href="#Algorithm" class="headerlink" title="Algorithm"></a>Algorithm</h1><h2 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h2><p>With a reservoir of size 1, we see a sequence of items, one at a time. A possible solution is the following:</p>
-<ol>
-<li>Keep the first item in reservoir.</li>
-<li>When the i-th item arrives (for i &gt; 1):<ul>
-<li>with probability 1/i, keep the new item(discard the old one)</li>
-<li>with probability i-1/i, keep the old item(discard the new one)</li>
+<p>There are limitations to this. For example, if a CL adds a feature that the reviewer doesn’t want in their system, then the reviewer can certainly deny approval even if the code is well-designed.</p>
+<p>A key point is there is no such thing as “perfect” code - there is only better code. Instead of seeking perfection, what a reviewer should seek is continuous improvement.</p>
+<p>For those unimportant or purely educational comments, prefix it with something like <strong>“Nit: “</strong> to indicate that it’s not mandatory for the author to resolve it in this CL.</p>
+<blockquote>
+<p>Technical facts and data overrule opinions and personal preferences. Aspects of software design are almost never a pure style issue or just a personal preferences.</p>
+</blockquote>
+<p>The <a href="https://google.github.io/styleguide/" target="_blank" rel="noopener">Google Style Guide</a> is the absolute authority when it comes to the matters of style. The style should be consistent with what is there. If there is no previous style, accept the author’s.</p>
+<blockquote>
+<p>Try to resolve the conflicts by all means but don’t let a CL sit around because the author and the reviewer can’t come to an agreement.</p>
+</blockquote>
+<h2 id="What-to-look-for-in-a-code-review"><a href="#What-to-look-for-in-a-code-review" class="headerlink" title="What to look for in a code review"></a>What to look for in a code review</h2><h3 id="Design"><a href="#Design" class="headerlink" title="Design"></a>Design</h3><p>The code is well-designed.</p>
+<h3 id="Functionality"><a href="#Functionality" class="headerlink" title="Functionality"></a>Functionality</h3><p>The functionality is good for the users of the code. Users can be the end users (when they are affected by the change) and developers (who will have to use this code in the future).</p>
+<p>Any UI change should be sensible and look good. It is hard to understand how some changes will impact a user by just reading the code. In this case, ask the developer to give you a demo or try it yourself.</p>
+<p>Be very cautious about any <strong>parallel programming</strong> which might cause race conditions and deadlocks. This is very hard to detect by just running the code. Avoid using concurrency models unless they are necessary.</p>
+<h3 id="Complexity"><a href="#Complexity" class="headerlink" title="Complexity"></a>Complexity</h3><p>Be vigilant about <strong>over-engineering</strong>. Encourage developers to solve the problem they know needs to be solved <strong>now</strong>, not the problem that the developer speculates might need to solved in the future. Unless you are an software architect or you are designing a  framework which guides the design of software, try not to do over-engineering.</p>
+<h3 id="Tests"><a href="#Tests" class="headerlink" title="Tests"></a>Tests</h3><p>Code has appropriate unit tests, which should be well-designed.</p>
+<h3 id="Comments"><a href="#Comments" class="headerlink" title="Comments"></a>Comments</h3><p>Comments are useful when they <strong>explain why</strong> some code exists and should not be explaining what some code is doing. Try to reduce the code complexity when code isn’t clear enough to explain itself. Note that comments are different from documentation of classes, modules, or functions, which should instead express the purpose of a piece of code, how it should be used, and how it behaves when used.</p>
+<h3 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h3><ul>
+<li>The developer used clear names for everything.</li>
+<li>Code is appropriately documented.</li>
+<li>The code conforms to our style guide.</li>
 </ul>
-</li>
-</ol>
-<h2 id="Proof"><a href="#Proof" class="headerlink" title="Proof"></a>Proof</h2><ul>
-<li>when there is only one item, it is kept with probability 1</li>
-<li>suppose there is (n-1) item, the (n-1)-th item is kept with probability with 1/(n-1), and each of the previous item is also kept with 1/(n-1)</li>
-<li>when there is n item, the n-th item is kept with probability with 1/n, and each of the previous n-1 items is also kept with probability 1/(n-1) * (n-1)/n = 1/n</li>
-</ul>
-<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">selectOneRandomNum</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">  Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">  <span class="keyword">int</span> ans = nums[<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">    <span class="keyword">int</span> m = rand.nextInt(i+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (m &lt; <span class="number">1</span>) ans = nums[i]; <span class="comment">// keep the new item with probability 1/i</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>If the size of reservoir is k, 1 &lt;= k &lt;= n, then:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] selectKRandomNum(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">  Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">  <span class="keyword">int</span>[] ans = <span class="keyword">new</span> <span class="keyword">int</span>[k];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; i++) ans[i] = nums[i];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = k; i &lt; nums.length; i++) &#123;</span><br><span class="line">    <span class="keyword">int</span> m = rand.nextInt(i+<span class="number">1</span>); <span class="comment">// pick a random index from 0 to i</span></span><br><span class="line">    <span class="keyword">if</span> (m &lt; k) ans[m] = nums[i]; <span class="comment">// keep the new item with probability of k/i. If the randomly picked index is smaller than k, replace the element present at the index with new element from nums.</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="Fisher-Yates-shuffle"><a href="#Fisher-Yates-shuffle" class="headerlink" title="Fisher-Yates shuffle"></a>Fisher-Yates shuffle</h1><h2 id="Algorithm-1"><a href="#Algorithm-1" class="headerlink" title="Algorithm"></a>Algorithm</h2><p>The F-Y shuffle generates a random permutation of a finite set - that is the algorithm shuffles the set.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] shuffle(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">  Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = nums.length - <span class="number">1</span>; i &gt; <span class="number">0</span>; i-- &#123;</span><br><span class="line">    <span class="keyword">int</span> j = rand.nextInt(i+<span class="number">1</span>); <span class="comment">// randomly pick an index between 0 and i, all inclusively</span></span><br><span class="line">    swap(nums, i, j);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">  //another solution</span></span><br><span class="line"><span class="comment">  for (int i = 1; i &lt; nums.length; i++) &#123;</span></span><br><span class="line"><span class="comment">    int j = rand.nextInt(i+1);</span></span><br><span class="line"><span class="comment">    swap(nums, i, j);</span></span><br><span class="line"><span class="comment">  &#125;</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Proof-1"><a href="#Proof-1" class="headerlink" title="Proof"></a>Proof</h2><ol>
-<li>The probability that the ith element (including the last one) goes to last position is 1/n, because we randomly pick an element in first iteration. (rand.nextInt(n)). [0, n) -&gt; total n elements</li>
-<li>The probability that the ith element goes to second last position is 1/n by dividing it into two cases:<ul>
-<li>i = n - 1 (index of the last element). The probability of last element going to second last position is = (probability the last element does not stay at its original position) * (probability that the index picked in previous step is picked again so that the last element is swapped to the second last element). So the probability is (n-1)/n * (1/n-1) = 1/n.</li>
-<li>0 &lt;= i &lt; n-1 (index of non-last), the probability that it goes to the second last position is = (probability that ith element is not picked in previous iteration) * (probability that ith element is picked in this iteration). So the probability is (n-1)/n * (1/n-1) = 1/n.</li>
-</ul>
-</li>
-<li>We can easily generalize above proof for any other positions.</li>
-</ol>
-<h1 id="An-interesting-question-in-LeetCode-about-Reservoir-Sampling"><a href="#An-interesting-question-in-LeetCode-about-Reservoir-Sampling" class="headerlink" title="An interesting question in LeetCode about Reservoir Sampling"></a>An interesting question in LeetCode about Reservoir Sampling</h1><h2 id="Question"><a href="#Question" class="headerlink" title="Question"></a>Question</h2><p>Given an array of integers with possible duplicates, randomly output the index of a  given target. For example: [1,2,3,3,3], randomly output the target number 3 indexes 2,3,4.</p>
-<h2 id="Answer"><a href="#Answer" class="headerlink" title="Answer"></a>Answer</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span>[] nums;</span><br><span class="line">  <span class="keyword">private</span> Random rand;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Solution</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.nums = nums;</span><br><span class="line">    <span class="keyword">this</span>.rand = <span class="keyword">new</span> Random();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">pick</span><span class="params">(<span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (nums[i] != target) <span class="keyword">continue</span>;</span><br><span class="line">      <span class="keyword">if</span> (rand.nextInt(++cnt) == <span class="number">0</span>) result = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>This method uses a variable <strong>cnt</strong> to count the number of target, cnt equals to (number of target - 1). Line 15 picks a random number between 0 and cnt inclusively, if it equals to 0 (with probability 1/(cnt+1) = 1/(number of target)), set the current result to the index.</p>
+<h2 id="Navigate-a-CL-in-review"><a href="#Navigate-a-CL-in-review" class="headerlink" title="Navigate a CL in review"></a>Navigate a CL in review</h2><h3 id="Step-One-Take-a-broader-view-of-the-change"><a href="#Step-One-Take-a-broader-view-of-the-change" class="headerlink" title="Step One: Take a broader view of the change"></a>Step One: Take a broader view of the change</h3><p>Look at the CL description and what the CL does in general. If a CL shouldn’t have happened in the first place, please respond immediately with an explanation why the change not be happening and suggest the developer what they should have done. A good example is:</p>
+<p>“Looks like you put some good work into this, thanks! (Be polite and recognize other’s work) However, we are actually going in the direction of removing the FooWidget system that you’re modifying here. We don’t want to make any change to it right now. (Explain why the change not be happening” How about instead you refactor our new BarWidget system? (Suggest the developer what they should have done)”</p>
+<h3 id="Step-Two-Examine-the-main-parts-of-the-CL"><a href="#Step-Two-Examine-the-main-parts-of-the-CL" class="headerlink" title="Step Two: Examine the main parts of the CL"></a>Step Two: Examine the main parts of the CL</h3><p>Look into the main parts of this CL first. If you see some major design problems with this part of the CL, send those comments immediately and most likely the rest of the CL doesn’t worth reviewing.</p>
+<h3 id="Step-Three-Look-through-the-rest-of-the-CL-in-an-appropriate-sequence"><a href="#Step-Three-Look-through-the-rest-of-the-CL-in-an-appropriate-sequence" class="headerlink" title="Step Three: Look through the rest of the CL in an appropriate sequence"></a>Step Three: Look through the rest of the CL in an appropriate sequence</h3><p>Once you’ve confirmed there are no major design problems with the CL as a whole, try to figure out a logical sequence to look through the files while also making sure you don’t miss reviewing any file.</p>
+<h2 id="Speed-of-Code-Reviews"><a href="#Speed-of-Code-Reviews" class="headerlink" title="Speed of Code Reviews"></a>Speed of Code Reviews</h2><p>Code reviews should be fast! You should do a code review shortly after it comes in if you are not in the middle of a focused task. One business day is the maximum time it should take to respond to a code review request.</p>
+<p>If somebody sends you a code review that is so large you’re not sure when you will be able to have time to review it, ask the developer to split the CL into several smaller CLs that build on each other, instead of one huge CL that has to be reviewed all at once. If the CL is not able to be broken down, try to provide some comments on the overall design of the CL. The goal as a reviewer should be to always unblock the developer or enable them to take some sort of further action quickly.</p>
+<h2 id="How-to-write-code-review-comments"><a href="#How-to-write-code-review-comments" class="headerlink" title="How to write code review comments"></a>How to write code review comments</h2><h3 id="Be-kind"><a href="#Be-kind" class="headerlink" title="Be kind"></a>Be kind</h3><p>Always make comments about the code but never about the developers. For example:</p>
+<p>Bad: “Why did you use threads here when there’s obviously no benefit to be gained from concurrency?”</p>
+<p>Good: “The concurrency model here is adding complexity to the system without any actual performance benefit that I can see. Because there’s no performance benefit, it’s best for this code to be single-threaded instead of using multiple threads.”</p>
+<h3 id="Explain-your-reasoning"><a href="#Explain-your-reasoning" class="headerlink" title="Explain your reasoning"></a>Explain your reasoning</h3><p>The good example above actually explains why you are making your comments instead of pointing out what is wrong. Always include explanation around your intent, the best practice you’re following and how you suggestion improves the code health.</p>
+<h3 id="Give-Guidance"><a href="#Give-Guidance" class="headerlink" title="Give Guidance"></a>Give Guidance</h3><p>Strike an appropriate balance between pointing out problems and providing direct guidance. Pointing out the problems and letting the developer make a decision often helps the developer learn and makes it easier to do code review. However, sometimes direct suggestions, instructions or even code are more helpful.</p>
+<p>The developers should write explanations in the code rather than only the code review code, which makes it easier for the users who might use the code in the future.</p>
+<h3 id="Handle-pushbacks"><a href="#Handle-pushbacks" class="headerlink" title="Handle pushbacks"></a>Handle pushbacks</h3><p>When the developers are right - mostly because they are closer to the code and have a better understanding of certain aspects of it - the reviewers should let the developers know that they are right and let the issue drop.</p>
+<p>When the reviewers still believe they are right. Please write an explanation which demonstrates an understanding of the developer’s reply and additional information about why the change is being requested.</p>
+<p>It is usually best to insist that the developer clean up their CL now, before the code is in the codebase and “done”. Most likely the developers forgot about the followup CLs which they promise to have some cleanup of the current CL. Letting people “clean things up later” is a common way for codebases to degenerate.</p>
+<p>If it is an emergency, it is better to have the developers file a bug for cleanup and assign to themselves so that the cleanup won’t get lost. And include a TODO comment in the code which references the filed bug.</p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>In general, the goal of a code review is to improve the codebase over time. As a reviewer, you should stick to the high standard of the code review and keep in mind what to look for in a CL. When writing the comments, try to be polite as much as possible and give explanations of your intend and suggestions to the developers. Resolve the conflicts in a polite manner as soon as possible. </p>
 
       
     </div>
@@ -447,8 +466,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/01/union-find/" rel="next" title="Union-Find">
-                <i class="fa fa-chevron-left"></i> Union-Find
+              <a href="/2019/09/22/java-exception-handling/" rel="next" title="Java Exception Handling Best Practices">
+                <i class="fa fa-chevron-left"></i> Java Exception Handling Best Practices
               </a>
             
           </div>
@@ -456,10 +475,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/27/Java类基础/" rel="prev" title="Java类基础">
-                Java类基础 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -490,7 +505,7 @@
 
   
     <div class="comments" id="comments">
-      <div class="fb-comments" data-href="http://dibugger.github.io/2017/01/03/reservoir-sampling/" data-numposts="10" data-width="100%" data-colorscheme="light">
+      <div class="fb-comments" data-href="http://dibugger.github.io/2019/09/25/how-to-do-a-code-review/" data-numposts="10" data-width="100%" data-colorscheme="light">
       </div>
     </div>
 
@@ -618,7 +633,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Concept"><span class="nav-number">1.</span> <span class="nav-text">Concept</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Algorithm"><span class="nav-number">2.</span> <span class="nav-text">Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Description"><span class="nav-number">2.1.</span> <span class="nav-text">Description</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Proof"><span class="nav-number">2.2.</span> <span class="nav-text">Proof</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementation"><span class="nav-number">2.3.</span> <span class="nav-text">Implementation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fisher-Yates-shuffle"><span class="nav-number">3.</span> <span class="nav-text">Fisher-Yates shuffle</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Algorithm-1"><span class="nav-number">3.1.</span> <span class="nav-text">Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Proof-1"><span class="nav-number">3.2.</span> <span class="nav-text">Proof</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#An-interesting-question-in-LeetCode-about-Reservoir-Sampling"><span class="nav-number">4.</span> <span class="nav-text">An interesting question in LeetCode about Reservoir Sampling</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Question"><span class="nav-number">4.1.</span> <span class="nav-text">Question</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Answer"><span class="nav-number">4.2.</span> <span class="nav-text">Answer</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Standard-of-Code-Review"><span class="nav-number">1.</span> <span class="nav-text">The Standard of Code Review</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-to-look-for-in-a-code-review"><span class="nav-number">2.</span> <span class="nav-text">What to look for in a code review</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Design"><span class="nav-number">2.1.</span> <span class="nav-text">Design</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Functionality"><span class="nav-number">2.2.</span> <span class="nav-text">Functionality</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Complexity"><span class="nav-number">2.3.</span> <span class="nav-text">Complexity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tests"><span class="nav-number">2.4.</span> <span class="nav-text">Tests</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Comments"><span class="nav-number">2.5.</span> <span class="nav-text">Comments</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Others"><span class="nav-number">2.6.</span> <span class="nav-text">Others</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Navigate-a-CL-in-review"><span class="nav-number">3.</span> <span class="nav-text">Navigate a CL in review</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-One-Take-a-broader-view-of-the-change"><span class="nav-number">3.1.</span> <span class="nav-text">Step One: Take a broader view of the change</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-Two-Examine-the-main-parts-of-the-CL"><span class="nav-number">3.2.</span> <span class="nav-text">Step Two: Examine the main parts of the CL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-Three-Look-through-the-rest-of-the-CL-in-an-appropriate-sequence"><span class="nav-number">3.3.</span> <span class="nav-text">Step Three: Look through the rest of the CL in an appropriate sequence</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Speed-of-Code-Reviews"><span class="nav-number">4.</span> <span class="nav-text">Speed of Code Reviews</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-write-code-review-comments"><span class="nav-number">5.</span> <span class="nav-text">How to write code review comments</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Be-kind"><span class="nav-number">5.1.</span> <span class="nav-text">Be kind</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Explain-your-reasoning"><span class="nav-number">5.2.</span> <span class="nav-text">Explain your reasoning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Give-Guidance"><span class="nav-number">5.3.</span> <span class="nav-text">Give Guidance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Handle-pushbacks"><span class="nav-number">5.4.</span> <span class="nav-text">Handle pushbacks</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">6.</span> <span class="nav-text">Summary</span></a></li></ol></div>
             
 
           </div>
