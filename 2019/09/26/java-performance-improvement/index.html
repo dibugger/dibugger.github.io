@@ -79,17 +79,21 @@
 
 
 
-<meta name="description" content="Concept, proof and implementation of Reservoir Sampling and Fisher Yates shuffle.">
+<meta name="description" content="本文介绍了常用的Java性能调优工具，主要是GC调优">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Reservoir Sampling">
-<meta property="og:url" content="http://dibugger.github.io/2017/01/03/reservoir-sampling/index.html">
+<meta property="og:title" content="java性能调优">
+<meta property="og:url" content="http://dibugger.github.io/2019/09/26/java-performance-improvement/index.html">
 <meta property="og:site_name" content="dibugger">
-<meta property="og:description" content="Concept, proof and implementation of Reservoir Sampling and Fisher Yates shuffle.">
+<meta property="og:description" content="本文介绍了常用的Java性能调优工具，主要是GC调优">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-17T05:10:38.225Z">
+<meta property="og:image" content="http://dibugger.github.io/images/post_images/java-performance-improvement/young_gc_log_example">
+<meta property="og:image" content="http://dibugger.github.io/images/post_images/java-performance-improvement/full_gc_log_example">
+<meta property="og:image" content="http://dibugger.github.io/images/post_images/java-performance-improvement/jstat_output">
+<meta property="og:updated_time" content="2019-09-27T05:33:53.331Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Reservoir Sampling">
-<meta name="twitter:description" content="Concept, proof and implementation of Reservoir Sampling and Fisher Yates shuffle.">
+<meta name="twitter:title" content="java性能调优">
+<meta name="twitter:description" content="本文介绍了常用的Java性能调优工具，主要是GC调优">
+<meta name="twitter:image" content="http://dibugger.github.io/images/post_images/java-performance-improvement/young_gc_log_example">
 
 
 
@@ -119,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://dibugger.github.io/2017/01/03/reservoir-sampling/">
+  <link rel="canonical" href="http://dibugger.github.io/2019/09/26/java-performance-improvement/">
 
 
 
 
 
-  <title>Reservoir Sampling | dibugger</title>
+  <title>java性能调优 | dibugger</title>
   
 
 
@@ -252,7 +256,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2017/01/03/reservoir-sampling/">
+    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2019/09/26/java-performance-improvement/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Di Luo">
@@ -269,7 +273,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">Reservoir Sampling</h2>
+          <h2 class="post-title" itemprop="name headline">java性能调优</h2>
         
 
         <div class="post-meta">
@@ -281,8 +285,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-03T10:27:49-08:00">
-                2017-01-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-26T22:33:53-07:00">
+                2019-09-26
               </time>
             
 
@@ -304,8 +308,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Algorithm/" itemprop="url" rel="index">
-                    <span itemprop="name">Algorithm</span>
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -322,8 +326,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/01/03/reservoir-sampling/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/03/reservoir-sampling/" itemprop="commentCount"></span>
+                <a href="/2019/09/26/java-performance-improvement/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/09/26/java-performance-improvement/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -331,7 +335,7 @@
 
           
           
-             <span id="/2017/01/03/reservoir-sampling/" class="leancloud_visitors" data-flag-title="Reservoir Sampling">
+             <span id="/2019/09/26/java-performance-improvement/" class="leancloud_visitors" data-flag-title="java性能调优">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -362,49 +366,87 @@
       
 
       
-        <blockquote class="blockquote-center">Concept, proof and implementation of Reservoir Sampling and Fisher Yates shuffle.</blockquote>
+        <blockquote class="blockquote-center">本文介绍了常用的Java性能调优工具，主要是GC调优</blockquote>
 <a id="more"></a>
 
-<h1 id="Concept"><a href="#Concept" class="headerlink" title="Concept"></a>Concept</h1><p>The concept of reservoir sampling comes from a question:</p>
-<blockquote>
-<p>How could you select one of n objects at random, where you see the objects sequentially but you do not know the value of n before. For example, how would you read a text file and select and print one random line, when you don’t know the number of lines in advance?</p>
+<p>本文大部分转载自<a href="https://juejin.im/post/5d8c5a5de51d4578323d51bd#heading-55" target="_blank" rel="noopener">掘金</a></p>
+<h2 id="GC调优"><a href="#GC调优" class="headerlink" title="GC调优"></a>GC调优</h2><p>对GC调优主要关注两个目标：</p>
+<ul>
+<li>响应速度：程序或系统对一个请求的响应时间</li>
+<li>吞吐量：一个特定时间段内应用系统的最大工作量</li>
+</ul>
+<p>GC导致的应用暂停时间影响响应速度，而GC处理线程的CPU使用率影响吞吐量。</p>
+<h3 id="GC分代收集算法"><a href="#GC分代收集算法" class="headerlink" title="GC分代收集算法"></a>GC分代收集算法</h3><p>将Java的堆内存逻辑上分成两块：新生代和老年代。</p>
+<p>新生代分为一个Eden区，两个Survivor区（S0, S1，又称from survivor, to survivor），大部分的对象都在Eden区中生成。很多对象的生命周期很短。每次新生代的垃圾回收后仅有少量对象存活，新生代的垃圾回收成为Young GC、Minor GC等，使用复制算法，只需少量的复制就可以完成回收。</p>
+<p>经过多次垃圾回收仍存活的对象会被移到老年代中，该区域中对象存活率高，垃圾回收通常使用“标记-整理”（mark-sweep）算法。</p>
+<ul>
+<li>Young GC: 当JVM无法为新对象分配在新生代内存空间时会触发Young GC。当Eden区占满时，新对象的分配频率越高，Young GC的频率也就越高。Young GC每次会引起stop-the-world，除了GC线程在工作外，其余线程均暂停，等待GC线程完成垃圾回收。</li>
+<li>Old GC: 只清理老年代中的GC事件，只有CMS的并发收集是这个模式。</li>
+<li>Full GC: 清理整个堆的GC事件，包括新生代、老年代、元空间等。</li>
+<li>Mixed GC: 清理整个新生代和部分老年代，只有G1有这个模式。</li>
+</ul>
+<h3 id="GC日志分析"><a href="#GC日志分析" class="headerlink" title="GC日志分析"></a>GC日志分析</h3><p>GC日志准确记录了每一次GC的执行时间和结果。免费的GC日志图形分析工具有GCViewer和gceasy等。</p>
+<p>开启GC日志的JVM启动参数为:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps  -XX:+PrintGCTimeStamps</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Young GC</li>
+</ul>
+<p><img src="/images/post_images/java-performance-improvement/young_gc_log_example"></p>
+<ul>
+<li>Full GC</li>
+</ul>
+<p><img src="/images/post_images/java-performance-improvement/full_gc_log_example"></p>
+<h3 id="内存分配策略"><a href="#内存分配策略" class="headerlink" title="内存分配策略"></a>内存分配策略</h3><blockquote>
+<p>对象优先在Eden区分配</p>
 </blockquote>
-<p>The problems that reservoir sampling solves are what ask you to select a random object the number of the objects is not given.</p>
-<h1 id="Algorithm"><a href="#Algorithm" class="headerlink" title="Algorithm"></a>Algorithm</h1><h2 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h2><p>With a reservoir of size 1, we see a sequence of items, one at a time. A possible solution is the following:</p>
-<ol>
-<li>Keep the first item in reservoir.</li>
-<li>When the i-th item arrives (for i &gt; 1):<ul>
-<li>with probability 1/i, keep the new item(discard the old one)</li>
-<li>with probability i-1/i, keep the old item(discard the new one)</li>
+<p>当Eden区没有足够的空间进行分配时，JVM将进行一次Young GC。</p>
+<blockquote>
+<p>大对象直接进入老年代</p>
+</blockquote>
+<p><strong>-XX:PretenureSizeThreshold</strong> 参数可以选择多大的对象直接在老年代分配，默认值为0，不管多大都优先在Eden中分配。</p>
+<p>大于参数设置的阈值值的对象直接在老年代分配，这样可以避免对象在 Eden 及两个 Survivor 直接发生大内存复制。</p>
+<blockquote>
+<p>长期存活的对象进入老年代</p>
+</blockquote>
+<p>对象每经历一次垃圾回收，且没被回收掉，它的年龄就增加 1，大于年龄阈值参数（-XX:MaxTenuringThreshold，默认 15）的对象，将晋升到老年代中。</p>
+<blockquote>
+<p>空间分配担保</p>
+</blockquote>
+<p>当进行 Young GC 之前，JVM 需要预估：老年代是否能够容纳 Young GC 后新生代晋升到老年代的存活对象，以确定是否需要提前触发 GC 回收老年代空间，基于空间分配担保策略来计算。</p>
+<p>Young GC 之后如果成功（Young GC 后晋升对象能放入老年代），则代表担保成功，不用再进行 Full GC，提高性能。</p>
+<p>如果失败，则会出现“promotion failed”错误，代表担保失败，需要进行 Full GC。</p>
+<blockquote>
+<p>动态年龄判定</p>
+</blockquote>
+<p>新生代对象的年龄可能没达到阈值（MaxTenuringThreshold 参数指定）就晋升老年代。<br>如果 Young GC 之后，新生代存活对象达到相同年龄所有对象大小的总和大于任意  Survivor 空间（S0+S1空间）的一半，此时 S0 或者 S1 区即将容纳不了存活的新生代对象。<br>年龄大于或等于该年龄的对象就可以直接进入老年代，无须等到 MaxTenuringThreshold 中要求的年龄。<br>另外，如果 Young GC 后 S0 或 S1 区不足以容纳：未达到晋升老年代条件的新生代存活对象，会导致这些存活对象直接进入老年代，需要尽量避免。</p>
+<h3 id="调优方法和思路"><a href="#调优方法和思路" class="headerlink" title="调优方法和思路"></a>调优方法和思路</h3><p>GC 优化的核心思路在于，尽可能让对象在新生代中分配和回收，尽量避免过多对象进入老年代，导致对老年代频繁进行垃圾回收，同时给系统足够的内存减少新生代垃圾回收次数，进行系统分析和优化也是围绕着这个思路展开。</p>
+<p>分析系统的运行状况：</p>
+<ul>
+<li>系统每秒请求数、每个请求创建多少对象，占用多少内存。</li>
+<li>Young GC 触发频率、对象进入老年代的速率。</li>
+<li>老年代占用内存、Full GC 触发频率、Full GC 触发的原因、长时间 Full GC 的原因。</li>
 </ul>
-</li>
-</ol>
-<h2 id="Proof"><a href="#Proof" class="headerlink" title="Proof"></a>Proof</h2><ul>
-<li>when there is only one item, it is kept with probability 1</li>
-<li>suppose there is (n-1) item, the (n-1)-th item is kept with probability with 1/(n-1), and each of the previous item is also kept with 1/(n-1)</li>
-<li>when there is n item, the n-th item is kept with probability with 1/n, and each of the previous n-1 items is also kept with probability 1/(n-1) * (n-1)/n = 1/n</li>
+<p>常用工具：</p>
+<h4 id="jstat"><a href="#jstat" class="headerlink" title="jstat"></a>jstat</h4><p>jstat 是 JVM 自带命令行工具，可用于统计内存分配速率、GC 次数，GC 耗时。常用命令格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -gc &lt;pid&gt; &lt;统计间隔时间&gt;  &lt;统计次数&gt;</span><br></pre></td></tr></table></figure>
+
+<p>输出返回值代表含义如下：</p>
+<p><img src="/images/post_images/java-performance-improvement/jstat_output"></p>
+<p>例如：jstat -gc 32683 1000 10，统计 pid=32683 的进程，每秒统计 1 次，统计 10 次。</p>
+<h4 id="jmap"><a href="#jmap" class="headerlink" title="jmap"></a>jmap</h4><p>jmap 也是 JVM 自带命令行工具，可用于了解系统运行时的对象分布。常用命令格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 命令行输出类名、类数量数量，类占用内存大小，</span><br><span class="line">// 按照类占用内存大小降序排列</span><br><span class="line">jmap -histo &lt;pid&gt;</span><br><span class="line"></span><br><span class="line">// 生成堆内存转储快照，在当前目录下导出dump.hrpof的二进制文件，</span><br><span class="line">// 可以用eclipse的MAT图形化工具分析</span><br><span class="line">jmap -dump:live,format=b,file=dump.hprof &lt;pid&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="jinfo"><a href="#jinfo" class="headerlink" title="jinfo"></a>jinfo</h4><p>用来查看正在运行的 Java 应用程序的扩展参数，包括 Java System 属性和 JVM 命令行参数。命令格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jinfo &lt;pid&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>监控告警系统：Zabbix、Prometheus、Open-Falcon</li>
+<li>jdk 自动实时内存监控工具：VisualVM</li>
+<li>堆外内存监控：Java VisualVM 安装 Buffer Pools 插件、google perf工具、Java NMT（Native Memory Tracking）工具</li>
+<li>GC 日志分析：GCViewer、gceasy</li>
+<li>GC 参数检查和优化：xxfox.perfma.com/</li>
 </ul>
-<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">selectOneRandomNum</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">  Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">  <span class="keyword">int</span> ans = nums[<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">    <span class="keyword">int</span> m = rand.nextInt(i+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (m &lt; <span class="number">1</span>) ans = nums[i]; <span class="comment">// keep the new item with probability 1/i</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>If the size of reservoir is k, 1 &lt;= k &lt;= n, then:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] selectKRandomNum(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">  Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">  <span class="keyword">int</span>[] ans = <span class="keyword">new</span> <span class="keyword">int</span>[k];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; i++) ans[i] = nums[i];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = k; i &lt; nums.length; i++) &#123;</span><br><span class="line">    <span class="keyword">int</span> m = rand.nextInt(i+<span class="number">1</span>); <span class="comment">// pick a random index from 0 to i</span></span><br><span class="line">    <span class="keyword">if</span> (m &lt; k) ans[m] = nums[i]; <span class="comment">// keep the new item with probability of k/i. If the randomly picked index is smaller than k, replace the element present at the index with new element from nums.</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="Fisher-Yates-shuffle"><a href="#Fisher-Yates-shuffle" class="headerlink" title="Fisher-Yates shuffle"></a>Fisher-Yates shuffle</h1><h2 id="Algorithm-1"><a href="#Algorithm-1" class="headerlink" title="Algorithm"></a>Algorithm</h2><p>The F-Y shuffle generates a random permutation of a finite set - that is the algorithm shuffles the set.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] shuffle(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">  Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = nums.length - <span class="number">1</span>; i &gt; <span class="number">0</span>; i-- &#123;</span><br><span class="line">    <span class="keyword">int</span> j = rand.nextInt(i+<span class="number">1</span>); <span class="comment">// randomly pick an index between 0 and i, all inclusively</span></span><br><span class="line">    swap(nums, i, j);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">  //another solution</span></span><br><span class="line"><span class="comment">  for (int i = 1; i &lt; nums.length; i++) &#123;</span></span><br><span class="line"><span class="comment">    int j = rand.nextInt(i+1);</span></span><br><span class="line"><span class="comment">    swap(nums, i, j);</span></span><br><span class="line"><span class="comment">  &#125;</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Proof-1"><a href="#Proof-1" class="headerlink" title="Proof"></a>Proof</h2><ol>
-<li>The probability that the ith element (including the last one) goes to last position is 1/n, because we randomly pick an element in first iteration. (rand.nextInt(n)). [0, n) -&gt; total n elements</li>
-<li>The probability that the ith element goes to second last position is 1/n by dividing it into two cases:<ul>
-<li>i = n - 1 (index of the last element). The probability of last element going to second last position is = (probability the last element does not stay at its original position) * (probability that the index picked in previous step is picked again so that the last element is swapped to the second last element). So the probability is (n-1)/n * (1/n-1) = 1/n.</li>
-<li>0 &lt;= i &lt; n-1 (index of non-last), the probability that it goes to the second last position is = (probability that ith element is not picked in previous iteration) * (probability that ith element is picked in this iteration). So the probability is (n-1)/n * (1/n-1) = 1/n.</li>
-</ul>
-</li>
-<li>We can easily generalize above proof for any other positions.</li>
-</ol>
-<h1 id="An-interesting-question-in-LeetCode-about-Reservoir-Sampling"><a href="#An-interesting-question-in-LeetCode-about-Reservoir-Sampling" class="headerlink" title="An interesting question in LeetCode about Reservoir Sampling"></a>An interesting question in LeetCode about Reservoir Sampling</h1><h2 id="Question"><a href="#Question" class="headerlink" title="Question"></a>Question</h2><p>Given an array of integers with possible duplicates, randomly output the index of a  given target. For example: [1,2,3,3,3], randomly output the target number 3 indexes 2,3,4.</p>
-<h2 id="Answer"><a href="#Answer" class="headerlink" title="Answer"></a>Answer</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span>[] nums;</span><br><span class="line">  <span class="keyword">private</span> Random rand;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Solution</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.nums = nums;</span><br><span class="line">    <span class="keyword">this</span>.rand = <span class="keyword">new</span> Random();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">pick</span><span class="params">(<span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (nums[i] != target) <span class="keyword">continue</span>;</span><br><span class="line">      <span class="keyword">if</span> (rand.nextInt(++cnt) == <span class="number">0</span>) result = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>This method uses a variable <strong>cnt</strong> to count the number of target, cnt equals to (number of target - 1). Line 15 picks a random number between 0 and cnt inclusively, if it equals to 0 (with probability 1/(cnt+1) = 1/(number of target)), set the current result to the index.</p>
 
       
     </div>
@@ -429,8 +471,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/01/union-find/" rel="next" title="Union-Find">
-                <i class="fa fa-chevron-left"></i> Union-Find
+              <a href="/2019/09/25/how-to-write-a-cl/" rel="next" title="How to Write a good CL">
+                <i class="fa fa-chevron-left"></i> How to Write a good CL
               </a>
             
           </div>
@@ -438,10 +480,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/27/Java类基础/" rel="prev" title="Java类基础">
-                Java类基础 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -592,7 +630,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Concept"><span class="nav-number">1.</span> <span class="nav-text">Concept</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Algorithm"><span class="nav-number">2.</span> <span class="nav-text">Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Description"><span class="nav-number">2.1.</span> <span class="nav-text">Description</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Proof"><span class="nav-number">2.2.</span> <span class="nav-text">Proof</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementation"><span class="nav-number">2.3.</span> <span class="nav-text">Implementation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fisher-Yates-shuffle"><span class="nav-number">3.</span> <span class="nav-text">Fisher-Yates shuffle</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Algorithm-1"><span class="nav-number">3.1.</span> <span class="nav-text">Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Proof-1"><span class="nav-number">3.2.</span> <span class="nav-text">Proof</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#An-interesting-question-in-LeetCode-about-Reservoir-Sampling"><span class="nav-number">4.</span> <span class="nav-text">An interesting question in LeetCode about Reservoir Sampling</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Question"><span class="nav-number">4.1.</span> <span class="nav-text">Question</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Answer"><span class="nav-number">4.2.</span> <span class="nav-text">Answer</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GC调优"><span class="nav-number">1.</span> <span class="nav-text">GC调优</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GC分代收集算法"><span class="nav-number">1.1.</span> <span class="nav-text">GC分代收集算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GC日志分析"><span class="nav-number">1.2.</span> <span class="nav-text">GC日志分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存分配策略"><span class="nav-number">1.3.</span> <span class="nav-text">内存分配策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调优方法和思路"><span class="nav-number">1.4.</span> <span class="nav-text">调优方法和思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jstat"><span class="nav-number">1.4.1.</span> <span class="nav-text">jstat</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jmap"><span class="nav-number">1.4.2.</span> <span class="nav-text">jmap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jinfo"><span class="nav-number">1.4.3.</span> <span class="nav-text">jinfo</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -756,9 +794,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://dibugger.github.io/2017/01/03/reservoir-sampling/';
-          this.page.identifier = '2017/01/03/reservoir-sampling/';
-          this.page.title = 'Reservoir Sampling';
+          this.page.url = 'http://dibugger.github.io/2019/09/26/java-performance-improvement/';
+          this.page.identifier = '2019/09/26/java-performance-improvement/';
+          this.page.title = 'java性能调优';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://dibugger.disqus.com/embed.js';
