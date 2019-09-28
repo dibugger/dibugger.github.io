@@ -79,17 +79,19 @@
 
 
 
-<meta name="description" content="Concept, proof and implementation of Reservoir Sampling and Fisher Yates shuffle.">
+<meta name="description" content="This post is a summary of the paper - MapReduce: Simplified Data Processing on Large Clusters.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Reservoir Sampling">
-<meta property="og:url" content="http://dibugger.github.io/2017/01/03/reservoir-sampling/index.html">
+<meta property="og:title" content="Map Reduce">
+<meta property="og:url" content="http://dibugger.github.io/2019/09/28/map-reduce/index.html">
 <meta property="og:site_name" content="dibugger">
-<meta property="og:description" content="Concept, proof and implementation of Reservoir Sampling and Fisher Yates shuffle.">
+<meta property="og:description" content="This post is a summary of the paper - MapReduce: Simplified Data Processing on Large Clusters.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-17T05:10:38.225Z">
+<meta property="og:image" content="http://dibugger.github.io/images/post_images/map-reduce/execution-overview.png">
+<meta property="og:updated_time" content="2019-09-28T21:44:17.691Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Reservoir Sampling">
-<meta name="twitter:description" content="Concept, proof and implementation of Reservoir Sampling and Fisher Yates shuffle.">
+<meta name="twitter:title" content="Map Reduce">
+<meta name="twitter:description" content="This post is a summary of the paper - MapReduce: Simplified Data Processing on Large Clusters.">
+<meta name="twitter:image" content="http://dibugger.github.io/images/post_images/map-reduce/execution-overview.png">
 
 
 
@@ -119,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://dibugger.github.io/2017/01/03/reservoir-sampling/">
+  <link rel="canonical" href="http://dibugger.github.io/2019/09/28/map-reduce/">
 
 
 
 
 
-  <title>Reservoir Sampling | dibugger</title>
+  <title>Map Reduce | dibugger</title>
   
 
 
@@ -252,7 +254,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2017/01/03/reservoir-sampling/">
+    <link itemprop="mainEntityOfPage" href="http://dibugger.github.io/2019/09/28/map-reduce/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Di Luo">
@@ -269,7 +271,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">Reservoir Sampling</h2>
+          <h2 class="post-title" itemprop="name headline">Map Reduce</h2>
         
 
         <div class="post-meta">
@@ -281,8 +283,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-03T10:27:49-08:00">
-                2017-01-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-28T14:44:17-07:00">
+                2019-09-28
               </time>
             
 
@@ -304,8 +306,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Algorithm/" itemprop="url" rel="index">
-                    <span itemprop="name">Algorithm</span>
+                  <a href="/categories/distributed-systems/" itemprop="url" rel="index">
+                    <span itemprop="name">distributed-systems</span>
                   </a>
                 </span>
 
@@ -322,8 +324,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/01/03/reservoir-sampling/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/03/reservoir-sampling/" itemprop="commentCount"></span>
+                <a href="/2019/09/28/map-reduce/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/09/28/map-reduce/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -331,7 +333,7 @@
 
           
           
-             <span id="/2017/01/03/reservoir-sampling/" class="leancloud_visitors" data-flag-title="Reservoir Sampling">
+             <span id="/2019/09/28/map-reduce/" class="leancloud_visitors" data-flag-title="Map Reduce">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -362,49 +364,66 @@
       
 
       
-        <blockquote class="blockquote-center">Concept, proof and implementation of Reservoir Sampling and Fisher Yates shuffle.</blockquote>
+        <blockquote class="blockquote-center">This post is a summary of the paper - MapReduce: Simplified Data Processing on Large Clusters.</blockquote>
 <a id="more"></a>
 
-<h1 id="Concept"><a href="#Concept" class="headerlink" title="Concept"></a>Concept</h1><p>The concept of reservoir sampling comes from a question:</p>
-<blockquote>
-<p>How could you select one of n objects at random, where you see the objects sequentially but you do not know the value of n before. For example, how would you read a text file and select and print one random line, when you don’t know the number of lines in advance?</p>
-</blockquote>
-<p>The problems that reservoir sampling solves are what ask you to select a random object the number of the objects is not given.</p>
-<h1 id="Algorithm"><a href="#Algorithm" class="headerlink" title="Algorithm"></a>Algorithm</h1><h2 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h2><p>With a reservoir of size 1, we see a sequence of items, one at a time. A possible solution is the following:</p>
+<h2 id="Concept"><a href="#Concept" class="headerlink" title="Concept"></a>Concept</h2><p>MapReduce is a programming model and an associated implementation for processing and generating large data sets. It was developed by Google and its open-source equivalence - Hadoop was developed initially by Yahoop! and maintained by Apache Foundation and a lot of active developers.</p>
+<ul>
+<li>map function: processes key/value pairs to generate a set of intermediate key/value pairs.</li>
+<li>reduce function: merges all intermediate values associated with the same intermediate key.</li>
+</ul>
+<p>Programs written in this functional style are automatically parallelized and executed on a large cluster of commodity machines. The run-time system takes care of the details of partitioning the input data, scheduling the program’s execution across a set of machines, handling machine failures and managing the required inter-machine communication.</p>
+<p>A general description of the map and reduce functions:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">map(String key, String values):</span><br><span class="line">    for each word w in value:</span><br><span class="line">        EmitIntermediate(w, &quot;1&quot;)</span><br><span class="line"></span><br><span class="line">reduce(String key, Iterator values):</span><br><span class="line">    int result = 0;</span><br><span class="line">    for each value v in values:</span><br><span class="line">        result += ParseInt(v);</span><br><span class="line">    Emit(AsString(result))</span><br></pre></td></tr></table></figure>
+
+<p>The MapReduce has been used in many computations and have a great performance, including Distributed Grep, Count of URL Access Frequency, Reverse Web-Link Graph, Term-Vector per Host, Inverted Index, Distributed Sort, etc</p>
+<h2 id="Execution-Overview"><a href="#Execution-Overview" class="headerlink" title="Execution Overview"></a>Execution Overview</h2><p><img src="/images/post_images/map-reduce/execution-overview.png"></p>
+<ul>
+<li>Map: Invocations are distributed across multiple machines by automatically partitioning the input data into M splits. Data will be processed in parallel by different machines.</li>
+<li>Reduce: Invocations are distributed by partitioning the intermediate key space into R pieces.</li>
+</ul>
+<p>M and R are configurable.</p>
 <ol>
-<li>Keep the first item in reservoir.</li>
-<li>When the i-th item arrives (for i &gt; 1):<ul>
-<li>with probability 1/i, keep the new item(discard the old one)</li>
-<li>with probability i-1/i, keep the old item(discard the new one)</li>
-</ul>
-</li>
+<li>Program splits the input files into M pieces of 16MB - 64MB per piece. Then starts up many copies of the program on a cluster of machines.</li>
+<li>One of the copies of the program is the master and the others are workers. Master assigns a map task or a reduce task to idle workers.</li>
+<li>Map worker reads the contents of the corresponding input split. It parses the key/value pairs out of the input files and feed them to user-defined Map function. Intermediate key/value pairs are buffered in memory.</li>
+<li>Periodically, the buffered pairs are written to local disk, partitioned into R regions by the partitioning function. The locations of these buffered pairs on the local disk are passed back to the master, who is responsible for forwarding these locations to the reduce workers.</li>
+<li>Reduce worker reads the buffered data from the local disks of the map workers, sort the intermediate key/value pairs by key and group all records by the same key. External sort is used if the data cannot fit into the memory.</li>
+<li>Reduce worker iterates over the sorted data and for each unique key, passes its corresponding values to the user-defined Reduce function. Output is appended to a final output file.</li>
 </ol>
-<h2 id="Proof"><a href="#Proof" class="headerlink" title="Proof"></a>Proof</h2><ul>
-<li>when there is only one item, it is kept with probability 1</li>
-<li>suppose there is (n-1) item, the (n-1)-th item is kept with probability with 1/(n-1), and each of the previous item is also kept with 1/(n-1)</li>
-<li>when there is n item, the n-th item is kept with probability with 1/n, and each of the previous n-1 items is also kept with probability 1/(n-1) * (n-1)/n = 1/n</li>
-</ul>
-<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">selectOneRandomNum</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">  Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">  <span class="keyword">int</span> ans = nums[<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">    <span class="keyword">int</span> m = rand.nextInt(i+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (m &lt; <span class="number">1</span>) ans = nums[i]; <span class="comment">// keep the new item with probability 1/i</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>If the size of reservoir is k, 1 &lt;= k &lt;= n, then:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] selectKRandomNum(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">  Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">  <span class="keyword">int</span>[] ans = <span class="keyword">new</span> <span class="keyword">int</span>[k];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; i++) ans[i] = nums[i];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = k; i &lt; nums.length; i++) &#123;</span><br><span class="line">    <span class="keyword">int</span> m = rand.nextInt(i+<span class="number">1</span>); <span class="comment">// pick a random index from 0 to i</span></span><br><span class="line">    <span class="keyword">if</span> (m &lt; k) ans[m] = nums[i]; <span class="comment">// keep the new item with probability of k/i. If the randomly picked index is smaller than k, replace the element present at the index with new element from nums.</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="Fisher-Yates-shuffle"><a href="#Fisher-Yates-shuffle" class="headerlink" title="Fisher-Yates shuffle"></a>Fisher-Yates shuffle</h1><h2 id="Algorithm-1"><a href="#Algorithm-1" class="headerlink" title="Algorithm"></a>Algorithm</h2><p>The F-Y shuffle generates a random permutation of a finite set - that is the algorithm shuffles the set.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] shuffle(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">  Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = nums.length - <span class="number">1</span>; i &gt; <span class="number">0</span>; i-- &#123;</span><br><span class="line">    <span class="keyword">int</span> j = rand.nextInt(i+<span class="number">1</span>); <span class="comment">// randomly pick an index between 0 and i, all inclusively</span></span><br><span class="line">    swap(nums, i, j);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">  //another solution</span></span><br><span class="line"><span class="comment">  for (int i = 1; i &lt; nums.length; i++) &#123;</span></span><br><span class="line"><span class="comment">    int j = rand.nextInt(i+1);</span></span><br><span class="line"><span class="comment">    swap(nums, i, j);</span></span><br><span class="line"><span class="comment">  &#125;</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Proof-1"><a href="#Proof-1" class="headerlink" title="Proof"></a>Proof</h2><ol>
-<li>The probability that the ith element (including the last one) goes to last position is 1/n, because we randomly pick an element in first iteration. (rand.nextInt(n)). [0, n) -&gt; total n elements</li>
-<li>The probability that the ith element goes to second last position is 1/n by dividing it into two cases:<ul>
-<li>i = n - 1 (index of the last element). The probability of last element going to second last position is = (probability the last element does not stay at its original position) * (probability that the index picked in previous step is picked again so that the last element is swapped to the second last element). So the probability is (n-1)/n * (1/n-1) = 1/n.</li>
-<li>0 &lt;= i &lt; n-1 (index of non-last), the probability that it goes to the second last position is = (probability that ith element is not picked in previous iteration) * (probability that ith element is picked in this iteration). So the probability is (n-1)/n * (1/n-1) = 1/n.</li>
-</ul>
-</li>
-<li>We can easily generalize above proof for any other positions.</li>
+<p>The output of the execution is available in R output files.</p>
+<h2 id="Master-Node"><a href="#Master-Node" class="headerlink" title="Master Node"></a>Master Node</h2><p>The master keeps several data strtuctures.</p>
+<ol>
+<li>The state (idle, in-progress, or completed) of each map and reduce task.</li>
+<li>The identity of the worker machine (for non-idle tasks).</li>
+<li>The locations and sizes of the R intermediate file regions produced by the map task.</li>
 </ol>
-<h1 id="An-interesting-question-in-LeetCode-about-Reservoir-Sampling"><a href="#An-interesting-question-in-LeetCode-about-Reservoir-Sampling" class="headerlink" title="An interesting question in LeetCode about Reservoir Sampling"></a>An interesting question in LeetCode about Reservoir Sampling</h1><h2 id="Question"><a href="#Question" class="headerlink" title="Question"></a>Question</h2><p>Given an array of integers with possible duplicates, randomly output the index of a  given target. For example: [1,2,3,3,3], randomly output the target number 3 indexes 2,3,4.</p>
-<h2 id="Answer"><a href="#Answer" class="headerlink" title="Answer"></a>Answer</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span>[] nums;</span><br><span class="line">  <span class="keyword">private</span> Random rand;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Solution</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.nums = nums;</span><br><span class="line">    <span class="keyword">this</span>.rand = <span class="keyword">new</span> Random();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">pick</span><span class="params">(<span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (nums[i] != target) <span class="keyword">continue</span>;</span><br><span class="line">      <span class="keyword">if</span> (rand.nextInt(++cnt) == <span class="number">0</span>) result = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>This method uses a variable <strong>cnt</strong> to count the number of target, cnt equals to (number of target - 1). Line 15 picks a random number between 0 and cnt inclusively, if it equals to 0 (with probability 1/(cnt+1) = 1/(number of target)), set the current result to the index.</p>
+<h2 id="Fault-Tolerant"><a href="#Fault-Tolerant" class="headerlink" title="Fault Tolerant"></a>Fault Tolerant</h2><h3 id="Worker-Failure"><a href="#Worker-Failure" class="headerlink" title="Worker Failure"></a>Worker Failure</h3><p>The master pings every worker periodically. The worker is marked as failed if no response back to the master for an amount of time.</p>
+<ol>
+<li>Any map tasks (even completed) are re-executed on a failure on other workers, because their intermediate results are stored on the local disks of a failed machine and are inaccessible.</li>
+<li>Completed reduce tasks won’t have to be re-executed because their output is stored in a global file system.</li>
+<li>Reduce task won’t read data from a broken machine.</li>
+</ol>
+<h3 id="Master-Failure"><a href="#Master-Failure" class="headerlink" title="Master Failure"></a>Master Failure</h3><p>Backup the master’s data structure periodically and a new master will be started from the last checkpoint. Due to the single master configuration, a better solution is to abort the current MapReduce computation on a master failure and leave the user to decide whether to retry the computation.</p>
+<h2 id="Locality"><a href="#Locality" class="headerlink" title="Locality"></a>Locality</h2><p>Network bandwidth is the bottleneck of this model. The underlying file system is GFS (HDFS is its open-source equivalent). The input file is divided into multiple blocks of 64MB, each will have 2 copies on different machines. Most input data is read locally and consumes no network bandwidth by the following attempts.</p>
+<ol>
+<li>The master will first try to assign a map task on a machine that contains a replica of the corresponding input data.</li>
+<li>If step 1 fails, the master will assign the map task to a machine that is close to the replicas. (on the same network switch for example)</li>
+</ol>
+<h2 id="Task-Granularity"><a href="#Task-Granularity" class="headerlink" title="Task Granularity"></a>Task Granularity</h2><p>We divide the map phase into M pieces and the reduce phase into R pieces. M and R should be much larger than the number of workers so that each worker can perform many different tasks. </p>
+<p>Bounds on M and R: the master must take O(M + R) scheduling decisions and keeps O(M * R) state in memory. R is often constrained by the users because the output of each reduce task ends up in a separate output file. Therefore, we tend to choose M so that each individual task is roughly 16-64MB which benefits most from the locality.</p>
+<h2 id="Backup-Tasks"><a href="#Backup-Tasks" class="headerlink" title="Backup Tasks"></a>Backup Tasks</h2><p>A machine that takes an unusual long time to complete one of the last few tasks will greatly slow down the total computation. This is not uncommon because the model is designed to be ran in hundreds of commodity machines which might have low performant disk, memory, CPU or network bandwidth.</p>
+<p>To alleviate the problem, when a MapReduce operation is close to completion, the master schedules backup executions of the remaining in-progress tasks. The task is marked as completed either the primary of the backup execution completes.</p>
+<h2 id="Refinements"><a href="#Refinements" class="headerlink" title="Refinements"></a>Refinements</h2><h3 id="Partitioning-Function"><a href="#Partitioning-Function" class="headerlink" title="Partitioning Function"></a>Partitioning Function</h3><p>The default partitioning function on the intermediate keys is hashing function (e.g. hash(key) mod R), which can result in a well-balanced partitions. Besides, MapReduce model supports custom partitioning function for users to fulfill different requirements. For example, the user may want to have all URLs from the same host to be in the same final output file. They can provide a custom partitioning functions like this: hash(hostname(url_key)) mod R.</p>
+<h3 id="Ordering-Guarantees"><a href="#Ordering-Guarantees" class="headerlink" title="Ordering Guarantees"></a>Ordering Guarantees</h3><p>Within a given partition, the intermediate key/value pairs are processed in increasing key order, which makes it easier to generate a sorted output file per partition.</p>
+<h3 id="Combiner-Function"><a href="#Combiner-Function" class="headerlink" title="Combiner Function"></a>Combiner Function</h3><p>To further reduce the network bandwidth consumption, we can provide a custom combiner function to do partial merging of the intermediate data on each machine that performs a map task. Typically the same code is used to implement both the combiner and reduce functions.This can significantly speed up certain classes of MapReduce computations.</p>
+<ul>
+<li>MapReduce model does not provide support for two-phase commits of multiple output files produced by a single task. Tasks that produce multiple output files with cross-file consistency requirements should be deterministic.</li>
+<li>A local MapReduce library is provided for local deployment and debugging.</li>
+<li>A status page is provided to show the progress of the computation, such as how many tasks have been completed, how many are in progress, processing rate, etc.</li>
+<li>A counter facility is provided to count occurrences of various events. The counter values from individual worker machines are periodically propagated to the master (piggybacked on the ping response). MapReduce computation model will eliminate duplicate executions of the same task from backup and re-executed tasks. This is useful if the user wants to do sanity check of their programs.</li>
+</ul>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>The MapReduce computation model has been used to process very large scale of data within Google for many years and have a very good performance. Several performance testing examples are also provided in the paper. If you are interested, please read the paper for details. </p>
 
       
     </div>
@@ -429,8 +448,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/01/union-find/" rel="next" title="Union-Find">
-                <i class="fa fa-chevron-left"></i> Union-Find
+              <a href="/2019/09/26/java-performance-improvement/" rel="next" title="Java性能调优">
+                <i class="fa fa-chevron-left"></i> Java性能调优
               </a>
             
           </div>
@@ -438,10 +457,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/27/Java类基础/" rel="prev" title="Java类基础">
-                Java类基础 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -592,7 +607,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Concept"><span class="nav-number">1.</span> <span class="nav-text">Concept</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Algorithm"><span class="nav-number">2.</span> <span class="nav-text">Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Description"><span class="nav-number">2.1.</span> <span class="nav-text">Description</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Proof"><span class="nav-number">2.2.</span> <span class="nav-text">Proof</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementation"><span class="nav-number">2.3.</span> <span class="nav-text">Implementation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fisher-Yates-shuffle"><span class="nav-number">3.</span> <span class="nav-text">Fisher-Yates shuffle</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Algorithm-1"><span class="nav-number">3.1.</span> <span class="nav-text">Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Proof-1"><span class="nav-number">3.2.</span> <span class="nav-text">Proof</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#An-interesting-question-in-LeetCode-about-Reservoir-Sampling"><span class="nav-number">4.</span> <span class="nav-text">An interesting question in LeetCode about Reservoir Sampling</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Question"><span class="nav-number">4.1.</span> <span class="nav-text">Question</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Answer"><span class="nav-number">4.2.</span> <span class="nav-text">Answer</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Concept"><span class="nav-number">1.</span> <span class="nav-text">Concept</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Execution-Overview"><span class="nav-number">2.</span> <span class="nav-text">Execution Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Master-Node"><span class="nav-number">3.</span> <span class="nav-text">Master Node</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fault-Tolerant"><span class="nav-number">4.</span> <span class="nav-text">Fault Tolerant</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Worker-Failure"><span class="nav-number">4.1.</span> <span class="nav-text">Worker Failure</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Master-Failure"><span class="nav-number">4.2.</span> <span class="nav-text">Master Failure</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Locality"><span class="nav-number">5.</span> <span class="nav-text">Locality</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Task-Granularity"><span class="nav-number">6.</span> <span class="nav-text">Task Granularity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Backup-Tasks"><span class="nav-number">7.</span> <span class="nav-text">Backup Tasks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Refinements"><span class="nav-number">8.</span> <span class="nav-text">Refinements</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Partitioning-Function"><span class="nav-number">8.1.</span> <span class="nav-text">Partitioning Function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ordering-Guarantees"><span class="nav-number">8.2.</span> <span class="nav-text">Ordering Guarantees</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Combiner-Function"><span class="nav-number">8.3.</span> <span class="nav-text">Combiner Function</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">9.</span> <span class="nav-text">Summary</span></a></li></ol></div>
             
 
           </div>
@@ -749,9 +764,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://dibugger.github.io/2017/01/03/reservoir-sampling/';
-          this.page.identifier = '2017/01/03/reservoir-sampling/';
-          this.page.title = 'Reservoir Sampling';
+          this.page.url = 'http://dibugger.github.io/2019/09/28/map-reduce/';
+          this.page.identifier = '2019/09/28/map-reduce/';
+          this.page.title = 'Map Reduce';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://dibugger.disqus.com/embed.js';
